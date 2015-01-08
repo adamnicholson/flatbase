@@ -2,13 +2,14 @@
 
 namespace Flatbase\Handler;
 
+use Flatbase\Flatbase;
 use Flatbase\Query\Query;
 
 class QueryHandler
 {
-    public function __construct($dir)
+    public function __construct(Flatbase $flatbase)
     {
-        $this->dir = $dir;
+        $this->flatbase = $flatbase;
     }
 
     protected function recordMatchesQuery($record, Query $query)
@@ -90,6 +91,6 @@ class QueryHandler
 
     protected function getFilename($collection)
     {
-        return rtrim($this->dir, '/') . '/' . $collection;
+        return rtrim($this->flatbase->dir, '/') . '/' . $collection;
     }
 }

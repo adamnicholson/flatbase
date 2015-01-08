@@ -11,13 +11,13 @@ class DeleteQueryHandler extends QueryHandler
 {
     public function handle(DeleteQuery $query)
     {
+        // Validate the query
         $this->validateQuery($query);
 
         // Read the existing data
-        $bus = new Flatbase($this->dir);
         $readQuery = new ReadQuery();
         $readQuery->setCollection($query->getCollection());
-        $existing = $bus->execute($readQuery);
+        $existing = $this->flatbase->execute($readQuery);
 
         // Remove the items which should be deleted
         $toRemove = [];

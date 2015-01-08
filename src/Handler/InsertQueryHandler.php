@@ -2,7 +2,6 @@
 
 namespace Flatbase\Handler;
 
-use Flatbase\Flatbase;
 use Flatbase\Query\InsertQuery;
 use Flatbase\Query\ReadQuery;
 
@@ -10,13 +9,13 @@ class InsertQueryHandler extends QueryHandler
 {
     public function handle(InsertQuery $query)
     {
+        // Validate the query
         $this->validateQuery($query);
 
         // Read the existing data
-        $bus = new Flatbase($this->dir);
         $readQuery = new ReadQuery();
         $readQuery->setCollection($query->getCollection());
-        $existing = $bus->execute($readQuery);
+        $existing = $this->flatbase->execute($readQuery);
 
         // Append the new item to it
         $existing->append($query->getValues());

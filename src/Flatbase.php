@@ -27,15 +27,15 @@ class Flatbase
     protected function resolveHandler(Query $query)
     {
         if ($query instanceof ReadQuery) {
-            return new ReadQueryHandler($this->dir);
+            return new ReadQueryHandler($this);
         }
 
         if ($query instanceof InsertQuery) {
-            return new InsertQueryHandler($this->dir);
+            return new InsertQueryHandler($this);
         }
 
         if ($query instanceof DeleteQuery) {
-            return new DeleteQueryHandler($this->dir);
+            return new DeleteQueryHandler($this);
         }
 
         throw new \Exception('Could not resolve handler for query');
