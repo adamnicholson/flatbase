@@ -86,7 +86,7 @@ class QueryHandler
 
     protected function write($collection, $data)
     {
-        file_put_contents($this->getFilename($collection), serialize($data));
+        file_put_contents($this->getFilename($collection), serialize($data), LOCK_EX);
     }
 
     protected function getFilename($collection)
