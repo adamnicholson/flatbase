@@ -21,10 +21,15 @@ class QueryHandler
     protected function read($collection)
     {
         if (!file_exists($this->getFilename($collection))) {
-            file_put_contents($this->getFilename($collection), serialize([]));
+            $this->write($collection, []);
         }
 
         return unserialize(file_get_contents($this->getFilename($collection)));
+    }
+
+    protected function write($collection, $data)
+    {
+        file_put_contents($this->getFilename($collection), serialize($data));
     }
 
     protected function getFilename($collection)
