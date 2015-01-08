@@ -18,4 +18,11 @@ class CollectionTest extends FlatbaseTestCase
         $this->assertEquals($items[2], $collection[2]);
         $this->assertEquals(count($collection), 3);
     }
+
+    public function testFirst()
+    {
+        $items = ['one', 'two', 'three'];
+        $collection = new Collection($items);
+        $this->assertEquals($collection->first(), 'one');
+    }
 }
