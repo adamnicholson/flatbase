@@ -33,7 +33,27 @@ class QueryHandler
         switch ($op) {
             case '=':
                 $value = $this->getRecordField($record, $left);
+                return $value == $right;
+
+            case '==':
+                $value = $this->getRecordField($record, $left);
                 return $value === $right;
+
+            case '!=':
+                $value = $this->getRecordField($record, $left);
+                return $value != $right;
+
+            case '!==':
+                $value = $this->getRecordField($record, $left);
+                return $value !== $right;
+
+            case '<':
+                $value = $this->getRecordField($record, $left);
+                return $value < $right;
+
+            case '>':
+                $value = $this->getRecordField($record, $left);
+                return $value > $right;
 
             default:
                 throw new \Exception('Operator [' . $op . '] is not supported');

@@ -31,7 +31,7 @@ class DeleteTest extends FlatbaseTestCase
         $query->setCollection('users');
         $query->addCondition('age', '=', 24);
         $collection = $flatbase->execute($query);
-        // Re-count them. Should be $countPreDelete mins one
+        // Re-count them. Should be $countPreDelete minus one
         $query = new ReadQuery();
         $query->setCollection('users');
         $this->assertEquals($flatbase->execute($query)->count(), $countPreDelete-1);

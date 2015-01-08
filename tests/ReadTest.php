@@ -50,4 +50,64 @@ class ReadTest extends FlatbaseTestCase
         $collection = $flatbase->execute($query);
         $this->assertEquals($collection->count(), 2);
     }
+
+    public function testReadWithLessThanCondition()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $query->addCondition('age', '<', 25);
+        $collection = $flatbase->execute($query);
+        $this->assertEquals($collection->count(), 2);
+    }
+
+    public function testReadWithMoreThanCondition()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $query->addCondition('age', '>', 23);
+        $collection = $flatbase->execute($query);
+        $this->assertEquals($collection->count(), 3);
+    }
+
+    public function testReadWithNotEqualToCondition()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $query->addCondition('name', '!=', 'Michael');
+        $collection = $flatbase->execute($query);
+        $this->assertEquals($collection->count(), 3);
+    }
+
+    public function testReadWithStrictEqualToCondition()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $query->addCondition('age', '==', '24');
+        $collection = $flatbase->execute($query);
+        $this->assertEquals($collection->count(), 0);
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $query->addCondition('age', '==', 24);
+        $collection = $flatbase->execute($query);
+        $this->assertEquals($collection->count(), 1);
+    }
+
+    public function testReadWithStrictNotEqualToCondition()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $query->addCondition('age', '!==', 24);
+        $collection = $flatbase->execute($query);
+        $this->assertEquals($collection->count(), 3);
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $query->addCondition('age', '!==', '24');
+        $collection = $flatbase->execute($query);
+        $this->assertEquals($collection->count(), 4);
+    }
 }
