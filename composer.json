@@ -1,0 +1,15 @@
+{
+    "name": "adamnicholson/flatbase2",
+    "authors": [
+        {
+            "name": "Adam Nicholson",
+            "email": "adamnicholson10@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Flatbase\\": ["src/", "tests/"]
+        }
+    }
+}
