@@ -3,6 +3,7 @@
 namespace Flatbase\Handler;
 
 use Flatbase\Query\InsertQuery;
+use Flatbase\Query\Query;
 use Flatbase\Query\ReadQuery;
 
 class InsertQueryHandler extends QueryHandler
@@ -24,7 +25,7 @@ class InsertQueryHandler extends QueryHandler
         $this->write($query->getCollection(), (array) $existing);
     }
 
-    protected function validateQuery(InsertQuery $query)
+    protected function validateQuery(Query $query)
     {
         parent::validateQuery($query);
 

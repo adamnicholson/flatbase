@@ -5,6 +5,7 @@ namespace Flatbase\Handler;
 use Flatbase\Flatbase;
 use Flatbase\Query\DeleteQuery;
 use Flatbase\Query\InsertQuery;
+use Flatbase\Query\Query;
 use Flatbase\Query\ReadQuery;
 
 class DeleteQueryHandler extends QueryHandler
@@ -34,7 +35,7 @@ class DeleteQueryHandler extends QueryHandler
         $this->write($query->getCollection(), (array) $existing);
     }
 
-    protected function validateQuery(DeleteQuery $query)
+    protected function validateQuery(Query $query)
     {
         parent::validateQuery($query);
     }
