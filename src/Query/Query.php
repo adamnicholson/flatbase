@@ -5,7 +5,7 @@ namespace Flatbase\Query;
 abstract class Query
 {
     protected $collection;
-    protected $conditions;
+    protected $conditions = [];
 
     public function setCollection($collection)
     {

@@ -11,6 +11,14 @@ class ReadQueryHandler extends QueryHandler
     {
         $this->validateQuery($query);
 
-        return new Collection($this->read($query->getCollection()));
+        $collection = new Collection();
+
+        foreach ($this->read($query->getCollection()) as $record) {
+            if ($this->recordMatchesQuery($record, $query)) {
+                $collection->append($record);
+            }
+        }
+
+        return $collection;
     }
 }

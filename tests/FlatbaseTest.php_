@@ -2,6 +2,7 @@
 
 namespace Flatbase;
 
+use Flatbase\Query\DeleteQuery;
 use Flatbase\Query\InsertQuery;
 use Flatbase\Query\ReadQuery;
 
@@ -56,8 +57,25 @@ class FlatbaseTest extends FlatbaseTestCase
         $this->assertEquals($countPostInsert, $countPreInsert+1);
     }
 
-    protected function getFlatbase()
+    public function testDeleteDecrementsCountToZeroWithNoConditions()
     {
-        return new Flatbase(__DIR__ . '/storage');
+        $flatbase = $this->getFlatbase();
+        // Insert something
+        $query = new InsertQuery();
+        $query->setCollection('users');
+        $query->setValues([
+            'firstname' => 'Adam',
+            'lastname' => 'Nicholson'
+        ]);
+        $flatbase->execute($query);
+        // Delete everything
+        $query = new DeleteQuery();
+        $query->setCollection('users');
+        $flatbase->execute($query);
+        // Read the new count
+        $query = new ReadQuery();
+        $query->setCollection('users');
+        $countDeleteInsert = $flatbase->execute($query)->count();
+        $this->assertEquals($countDeleteInsert, 0);
     }
 }
