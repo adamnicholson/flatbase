@@ -12,7 +12,7 @@ class Filesystem implements Storage
     public function get($key)
     {
         if (!file_exists($this->getFilename($key))) {
-            $this->set($key, serialize([]));
+            $this->set($key, []);
         }
 
         return unserialize(file_get_contents($this->getFilename($key)));
