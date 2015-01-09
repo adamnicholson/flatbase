@@ -9,12 +9,13 @@ use Flatbase\Query\DeleteQuery;
 use Flatbase\Query\InsertQuery;
 use Flatbase\Query\Query;
 use Flatbase\Query\ReadQuery;
+use Flatbase\Storage\Storage;
 
 class Flatbase
 {
-    public function __construct($dir)
+    public function __construct(Storage $storage)
     {
-        $this->dir = $dir;
+        $this->storage = $storage;
     }
 
     public function execute(Query $query)
@@ -39,5 +40,10 @@ class Flatbase
         }
 
         throw new \Exception('Could not resolve handler for query');
+    }
+
+    public function getStorage()
+    {
+        return $this->storage;
     }
 }

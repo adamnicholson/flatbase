@@ -4,12 +4,15 @@ namespace Flatbase;
 
 use Flatbase\Query\DeleteQuery;
 use Flatbase\Query\InsertQuery;
+use Flatbase\Storage\Filesystem;
 
 abstract class FlatbaseTestCase extends \PHPUnit_Framework_TestCase
 {
     protected function getFlatbase()
     {
-        return new Flatbase(__DIR__ . '/storage');
+        $storage = new Filesystem(__DIR__ . '/storage');
+        $flatbase = new Flatbase($storage);
+        return $flatbase;
     }
 
     protected function getFlatbaseWithSampleData()

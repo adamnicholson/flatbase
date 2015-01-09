@@ -5,12 +5,14 @@ namespace Flatbase;
 use Flatbase\Query\DeleteQuery;
 use Flatbase\Query\InsertQuery;
 use Flatbase\Query\ReadQuery;
+use Flatbase\Storage\Filesystem;
 
 class FlatbaseTest extends FlatbaseTestCase
 {
     public function testInstance()
     {
-        $flatbase = new Flatbase(__DIR__ . '/storage');
+        $storage = new Filesystem(__DIR__ . '/storage');
+        $flatbase = new Flatbase($storage);
         $this->assertTrue($flatbase instanceof Flatbase);
     }
 

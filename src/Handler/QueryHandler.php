@@ -77,20 +77,11 @@ class QueryHandler
 
     protected function read($collection)
     {
-        if (!file_exists($this->getFilename($collection))) {
-            $this->write($collection, []);
-        }
-
-        return unserialize(file_get_contents($this->getFilename($collection)));
+        return $this->flatbase->getStorage()->get($collection);
     }
 
     protected function write($collection, $data)
     {
-        file_put_contents($this->getFilename($collection), serialize($data), LOCK_EX);
-    }
-
-    protected function getFilename($collection)
-    {
-        return rtrim($this->flatbase->dir, '/') . '/' . $collection;
+        $this->flatbase->getStorage()->set($collection, $data);
     }
 }
