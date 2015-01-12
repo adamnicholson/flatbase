@@ -11,5 +11,8 @@
         "psr-4": {
             "Flatbase\\": ["src/", "tests/"]
         }
+    },
+    "require-dev": {
+        "devster/ubench": "~1.1"
     }
 }
