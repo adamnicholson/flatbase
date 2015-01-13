@@ -110,4 +110,24 @@ class ReadTest extends FlatbaseTestCase
         $collection = $flatbase->execute($query);
         $this->assertEquals($collection->count(), 4);
     }
+
+    public function testSelfExecutionWithGet()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $this->assertTrue($flatbase->read()->in('users')->get() instanceof Collection);
+    }
+
+    public function testSelfExecutionWithFirstReturnsFirstItem()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $item1 = $flatbase->read()->in('users')->get()->first();
+        $this->assertEquals($flatbase->read()->in('users')->first(), $item1);
+    }
+
+    public function testSelfExecutionWithFirstReturnsNullIfCollectionEmpty()
+    {
+        $flatbase = $this->getFlatbase();
+        $flatbase->delete()->in('users')->execute();
+        $this->assertEquals($flatbase->read()->in('users')->first(), null);
+    }
 }
