@@ -41,7 +41,7 @@ class Flatbase
      */
     public function insert()
     {
-        return new InsertQuery();
+        return new InsertQuery($this);
     }
 
     /**
@@ -51,7 +51,7 @@ class Flatbase
      */
     public function update()
     {
-        return new UpdateQuery();
+        return new UpdateQuery($this);
     }
 
     /**
@@ -61,7 +61,7 @@ class Flatbase
      */
     public function read()
     {
-        return new ReadQuery();
+        return new ReadQuery($this);
     }
 
     /**
@@ -71,7 +71,7 @@ class Flatbase
      */
     public function delete()
     {
-        return new DeleteQuery();
+        return new DeleteQuery($this);
     }
 
     /**

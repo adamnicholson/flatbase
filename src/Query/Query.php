@@ -2,11 +2,19 @@
 
 namespace Flatbase\Query;
 
+use Flatbase\Flatbase;
+
 abstract class Query
 {
+    protected $flatbase;
     protected $collection;
     protected $values;
     protected $conditions = [];
+
+    public function __construct(Flatbase $flatbase = null)
+    {
+        $this->flatbase = $flatbase;
+    }
 
     /**
      * Set the collection this query is querying
@@ -74,6 +82,16 @@ abstract class Query
     {
         $this->values = $values;
         return $this;
+    }
+
+    public function execute()
+    {
+        if (!$this->flatbase) {
+            throw new \Exception('Query::execute() can only be called when the query was
+                created by Flatbase, eg. Flatbase::read()');
+        }
+
+        return $this->flatbase->execute($this);
     }
 
     /**

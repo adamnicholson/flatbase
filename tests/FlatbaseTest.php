@@ -104,4 +104,10 @@ class FlatbaseTest extends FlatbaseTestCase
         $this->assertTrue($flatbase->read() instanceof ReadQuery);
         $this->assertTrue($flatbase->delete() instanceof DeleteQuery);
     }
+
+    public function testQueriesCanSelfExecute()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $this->assertTrue($flatbase->read()->in('users')->execute() instanceof Collection);
+    }
 }
