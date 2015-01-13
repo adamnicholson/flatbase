@@ -82,6 +82,20 @@ class FlatbaseTest extends FlatbaseTestCase
         $this->assertEquals($countDeleteInsert, 0);
     }
 
+    public function testUpdateChangesValueAndDoesNotAffectCollectionCount()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $countMatchingUsersBeforeUpdate = $flatbase->execute($flatbase->read()->in('users')->where('age', '=', 26))->count();
+        $countAllUsersBeforeUpdate = $flatbase->execute($flatbase->read()->in('users'))->count();
+        $query = $flatbase->update()->in('users')->where('age', '=', 26)->setValues([
+            'age' => 35
+        ]);
+        $flatbase->execute($query);
+        $this->assertEquals($flatbase->execute($flatbase->read()->in('users'))->count(), $countAllUsersBeforeUpdate);
+        $this->assertEquals($flatbase->execute($flatbase->read()->in('users')->where('age', '=', 35))->count(), $countMatchingUsersBeforeUpdate);
+
+    }
+
     public function testQueryBuilderConstructors()
     {
         $flatbase = $this->getFlatbase();

@@ -5,6 +5,7 @@ namespace Flatbase\Query;
 abstract class Query
 {
     protected $collection;
+    protected $values;
     protected $conditions = [];
 
     /**
@@ -55,6 +56,24 @@ abstract class Query
     public function getConditions()
     {
         return $this->conditions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValues()
+    {
+        return $this->values;
+    }
+
+    /**
+     * @param mixed $values
+     * @return $this
+     */
+    public function setValues($values)
+    {
+        $this->values = $values;
+        return $this;
     }
 
     /**

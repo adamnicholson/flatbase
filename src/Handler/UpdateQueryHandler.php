@@ -2,23 +2,35 @@
 
 namespace Flatbase\Handler;
 
-use Flatbase\Collection;
 use Flatbase\Query\ReadQuery;
+use Flatbase\Query\UpdateQuery;
 
 class UpdateQueryHandler extends QueryHandler
 {
-    public function handle(ReadQuery $query)
+    public function handle(UpdateQuery $query)
     {
+        // Validate the query
         $this->validateQuery($query);
 
-        $collection = new Collection();
+        // Read the existing data
+        $readQuery = new ReadQuery();
+        $readQuery->setCollection($query->getCollection());
+        $existing = $this->flatbase->execute($readQuery);
 
-        foreach ($this->read($query->getCollection()) as $record) {
+        // Update the items which should be updated
+        $toUpdate = [];
+        foreach ($existing as $offset => $record) {
             if ($this->recordMatchesQuery($record, $query)) {
-                $collection->append($record);
+                $toUpdate[] = $offset;
+            }
+        }
+        foreach ($toUpdate as $offset) {
+            foreach ($query->getValues() as $key => $value) {
+                $existing[$offset][$key] = $value;
             }
         }
 
-        return $collection;
+        // Write back to the storage
+        $this->write($query->getCollection(), (array) $existing);
     }
 }

@@ -5,6 +5,7 @@ namespace Flatbase;
 use Flatbase\Handler\DeleteQueryHandler;
 use Flatbase\Handler\InsertQueryHandler;
 use Flatbase\Handler\ReadQueryHandler;
+use Flatbase\Handler\UpdateQueryHandler;
 use Flatbase\Query\DeleteQuery;
 use Flatbase\Query\InsertQuery;
 use Flatbase\Query\Query;
@@ -92,6 +93,10 @@ class Flatbase
 
         if ($query instanceof DeleteQuery) {
             return new DeleteQueryHandler($this);
+        }
+
+        if ($query instanceof UpdateQuery) {
+            return new UpdateQueryHandler($this);
         }
 
         throw new \Exception('Could not resolve handler for query');
