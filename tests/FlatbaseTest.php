@@ -5,6 +5,7 @@ namespace Flatbase;
 use Flatbase\Query\DeleteQuery;
 use Flatbase\Query\InsertQuery;
 use Flatbase\Query\ReadQuery;
+use Flatbase\Query\UpdateQuery;
 use Flatbase\Storage\Filesystem;
 
 class FlatbaseTest extends FlatbaseTestCase
@@ -79,5 +80,14 @@ class FlatbaseTest extends FlatbaseTestCase
         $query->setCollection('users');
         $countDeleteInsert = $flatbase->execute($query)->count();
         $this->assertEquals($countDeleteInsert, 0);
+    }
+
+    public function testQueryBuilderConstructors()
+    {
+        $flatbase = $this->getFlatbase();
+        $this->assertTrue($flatbase->insert() instanceof InsertQuery);
+        $this->assertTrue($flatbase->update() instanceof UpdateQuery);
+        $this->assertTrue($flatbase->read() instanceof ReadQuery);
+        $this->assertTrue($flatbase->delete() instanceof DeleteQuery);
     }
 }
