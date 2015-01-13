@@ -5,7 +5,7 @@ namespace Flatbase\Handler;
 use Flatbase\Flatbase;
 use Flatbase\Query\Query;
 
-class QueryHandler
+abstract class QueryHandler
 {
     public function __construct(Flatbase $flatbase)
     {
