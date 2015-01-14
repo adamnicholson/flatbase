@@ -84,6 +84,12 @@ abstract class Query
         return $this;
     }
 
+    /**
+     * Execute this query
+     *
+     * @return \Flatbase\Collection|void
+     * @throws \Exception
+     */
     public function execute()
     {
         if (!$this->flatbase) {
