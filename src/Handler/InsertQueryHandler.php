@@ -13,9 +13,44 @@ class InsertQueryHandler extends QueryHandler
         // Validate the query
         $this->validateQuery($query);
 
+        // Open the file resource
         $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
         $fp = fopen($file, 'r+');
 
+        $count = $this->countItemsInFile($fp);
+
+        // Determine the serialized string size declaration
+        $oldDeclaration = 'a:' . $count . ':';
+        $newDeclaration = 'a:' . ($count+1) . ':';
+
+        if (strlen($oldDeclaration) === strlen($newDeclaration)) {
+            // The new serialized string has the same length declaration as it did previously,
+            // so we can switch the numbers and append the new item quickly.
+
+            // Update the length declaration
+            fseek($fp, 0);
+            fwrite($fp, 'a:' . ($count+1));
+
+            // Append the new item to the string
+            fseek($fp, -1, SEEK_END);
+            fwrite($fp, 'i:' . $count . ';' . serialize($query->getValues()) . '}');
+            fclose($fp);
+            return;
+        }
+
+        // The new serialized string will have a different character length for the size
+        // declaration. Not sure how to "push" the rest of the characters back so for now we'll
+        // just use the legacy way inserting
+
+        $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
+        $serialized = file_get_contents($file);
+        $this->appendToSerializedString($serialized, $query->getValues());
+        file_put_contents($file, $serialized);
+    }
+
+
+    protected function countItemsInFile($fp)
+    {
         $colonsEncountered = 0;
         $count = '';
         for ($i=0; $i<=10; $i++) {
@@ -30,24 +65,8 @@ class InsertQueryHandler extends QueryHandler
                 $colonsEncountered++;
             }
         }
-        $oldDecleration = 'a:' . $count . ':';
-        $newDecleration = 'a:' . ($count+1) . ':';
-        if (strlen($oldDecleration) === strlen($newDecleration)) {
-            // Update the count
-            fseek($fp, 0);
-            fwrite($fp, 'a:' . ($count+1));
-            // Append the new item
-            fseek($fp, -1, SEEK_END);
-            fwrite($fp, 'i:' . $count . ';' . serialize($query->getValues()) . '}');
-            fclose($fp);
-            return;
-        }
 
-        // New-ish way of doing it
-        $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
-        $serialized = file_get_contents($file);
-        $this->appendToSerializedString($serialized, $query->getValues());
-        file_put_contents($file, $serialized);
+        return $count;
     }
 
     protected function appendToSerializedString(&$serialized, $item)
