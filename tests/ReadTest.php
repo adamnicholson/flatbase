@@ -116,6 +116,14 @@ class ReadTest extends FlatbaseTestCase
         $this->assertEquals($collection->count(), 4);
     }
 
+    public function testFluentQueryBuildingAliases()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $query = $flatbase->read()->in('users')->where('name', '=', 'Adam');
+        $users = $flatbase->execute($query);
+        $this->assertEquals($users->count(), 3);
+    }
+
     public function testSelfExecutionWithCount()
     {
         $flatbase = $this->getFlatbaseWithSampleData();
@@ -128,6 +136,13 @@ class ReadTest extends FlatbaseTestCase
         $this->assertTrue($flatbase->read()->in('users')->get() instanceof Collection);
     }
 
+    public function testFluentAliases()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $query = $flatbase->read()->in('users')->where('name', '=', 'Adam');
+        $users = $flatbase->execute($query);
+        $this->assertEquals($users->count(), 3);
+    }
     public function testSelfExecutionWithFirstReturnsFirstItem()
     {
         $flatbase = $this->getFlatbaseWithSampleData();
