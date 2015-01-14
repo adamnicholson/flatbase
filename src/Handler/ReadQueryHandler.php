@@ -13,6 +13,11 @@ class ReadQueryHandler extends QueryHandler
 
         $records = $this->read($query->getCollection());
 
+        if (!$query->getConditions()) {
+            // No conditions, so just return the result
+            return new Collection($records);
+        }
+
         foreach ($records as $key => $record) {
             if (!$this->recordMatchesQuery($record, $query)) {
                 unset($records[$key]);
