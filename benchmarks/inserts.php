@@ -26,6 +26,6 @@ for ($i = 0; $i <= $limit; $i++) {
 $bench->end();
 
 // Post the results
-echo $limit . ' inserts completed' . PHP_EOL;
+echo number_format($limit) . ' inserts completed' . PHP_EOL;
 echo 'Execution time: ' . $bench->getTime() . PHP_EOL;
 echo 'Memory peak: ' . $bench->getMemoryPeak() . PHP_EOL;
