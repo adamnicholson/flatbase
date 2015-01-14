@@ -98,7 +98,6 @@ class ReadTest extends FlatbaseTestCase
             ->where('age', '==', 24)
             ->where('name', '==', 'Adam')
             ->get()->count();
-
         $this->assertEquals($count, 1);
     }
 
@@ -115,6 +114,12 @@ class ReadTest extends FlatbaseTestCase
         $query->addCondition('age', '!==', '24');
         $collection = $flatbase->execute($query);
         $this->assertEquals($collection->count(), 4);
+    }
+
+    public function testSelfExecutionWithCount()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $this->assertEquals($flatbase->read()->in('users')->count(), 4);
     }
 
     public function testSelfExecutionWithGet()

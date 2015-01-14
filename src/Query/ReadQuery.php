@@ -24,4 +24,14 @@ class ReadQuery extends Query
     {
         return $this->get()->first();
     }
+
+    /**
+     * Count the records matching the query conditions
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->get()->count();
+    }
 }
