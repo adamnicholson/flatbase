@@ -14,7 +14,7 @@ $bench->start();
 
 $flatbase = new Flatbase(new Filesystem(__DIR__ . '/storage'));
 
-$limit = 1000;
+$limit = 70000;
 for ($i = 0; $i <= $limit; $i++) {
     $insertQuery = new \Flatbase\Query\InsertQuery();
     $insertQuery->setCollection('test-insert-collection');

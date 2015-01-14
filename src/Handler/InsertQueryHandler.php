@@ -14,9 +14,39 @@ class InsertQueryHandler extends QueryHandler
         $this->validateQuery($query);
 
         $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
+        $fp = fopen($file, 'r+');
+
+        $colonsEncountered = 0;
+        $count = '';
+        for ($i=0; $i<=10; $i++) {
+            $char = fgetc($fp);
+            if ($colonsEncountered === 2) {
+                break;
+            }
+            if ($colonsEncountered === 1 && $char !== ':') {
+                $count .= $char;
+            }
+            if ($char === ':') {
+                $colonsEncountered++;
+            }
+        }
+        $oldDecleration = 'a:' . $count . ':';
+        $newDecleration = 'a:' . ($count+1) . ':';
+        if (strlen($oldDecleration) === strlen($newDecleration)) {
+            // Update the count
+            fseek($fp, 0);
+            fwrite($fp, 'a:' . ($count+1));
+            // Append the new item
+            fseek($fp, -1, SEEK_END);
+            fwrite($fp, 'i:' . $count . ';' . serialize($query->getValues()) . '}');
+            fclose($fp);
+            return;
+        }
+
+        // New-ish way of doing it
+        $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
         $serialized = file_get_contents($file);
         $this->appendToSerializedString($serialized, $query->getValues());
-
         file_put_contents($file, $serialized);
     }
 
