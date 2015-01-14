@@ -94,6 +94,12 @@ class ReadTest extends FlatbaseTestCase
         $query->addCondition('age', '==', 24);
         $collection = $flatbase->execute($query);
         $this->assertEquals($collection->count(), 1);
+        $count = $flatbase->read()->in('users')
+            ->where('age', '==', 24)
+            ->where('name', '==', 'Adam')
+            ->get()->count();
+
+        $this->assertEquals($count, 1);
     }
 
     public function testReadWithStrictNotEqualToCondition()

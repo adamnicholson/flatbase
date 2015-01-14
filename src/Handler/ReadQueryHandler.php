@@ -11,13 +11,12 @@ class ReadQueryHandler extends QueryHandler
     {
         $this->validateQuery($query);
 
-        $records = $this->read($query->getCollection());
-
+        // Non-conditional reads
         if (!$query->getConditions()) {
-            // No conditions, so just return the result
-            return new Collection($records);
+            return $this->handleNoConditionRead($query);
         }
 
+        $records = $this->read($query->getCollection());
         foreach ($records as $key => $record) {
             if (!$this->recordMatchesQuery($record, $query)) {
                 unset($records[$key]);
@@ -25,5 +24,22 @@ class ReadQueryHandler extends QueryHandler
         }
 
         return new Collection($records);
+    }
+
+    protected function handleNoConditionRead(ReadQuery $query)
+    {
+        $records = $this->read($query->getCollection());
+        return new Collection($records);
+    }
+
+    protected function isOnlyStrictConditionals(ReadQuery $query)
+    {
+        foreach ($query->getConditions() as $condition) {
+            if ($condition[1] !== '==') {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
