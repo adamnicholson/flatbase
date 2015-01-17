@@ -15,6 +15,9 @@ class InsertQueryHandler extends QueryHandler
 
         // Open the file resource
         $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
+        if (!file_exists($file)) {
+            file_put_contents($file, serialize([]));
+        }
         $fp = fopen($file, 'r+');
 
         $count = $this->countItemsInFile($fp);

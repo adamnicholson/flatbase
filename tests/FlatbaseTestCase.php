@@ -8,9 +8,17 @@ use Flatbase\Storage\Filesystem;
 
 abstract class FlatbaseTestCase extends \PHPUnit_Framework_TestCase
 {
+    protected $storageDir;
+
+    public function setup()
+    {
+        $this->storageDir = __DIR__ . '/storage';
+        parent::setup();
+    }
+
     protected function getFlatbase()
     {
-        $storage = new Filesystem(__DIR__ . '/storage');
+        $storage = new Filesystem($this->storageDir);
         $flatbase = new Flatbase($storage);
         return $flatbase;
     }

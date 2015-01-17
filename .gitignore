@@ -2,3 +2,4 @@ vendor/
 composer.lock
 tests/storage/
 benchmarks/storage/
+humbuglog.txt
