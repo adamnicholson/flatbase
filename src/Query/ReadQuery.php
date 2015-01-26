@@ -4,6 +4,41 @@ namespace Flatbase\Query;
 
 class ReadQuery extends Query
 {
+    protected $offset = 0;
+    protected $limit = null;
+
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    public function limit($limit)
+    {
+        return $this->setLimit($limit);
+    }
+
+    public function skip($offset)
+    {
+        return $this->setOffset($offset);
+    }
+
     /**
      * Alias of execute()
      *
@@ -22,7 +57,10 @@ class ReadQuery extends Query
      */
     public function first()
     {
-        return $this->get()->first();
+        foreach ($this->get() as $item) {
+            return $item;
+        }
+        return null;
     }
 
     /**

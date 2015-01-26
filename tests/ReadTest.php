@@ -156,4 +156,41 @@ class ReadTest extends FlatbaseTestCase
         $flatbase->delete()->in('users')->execute();
         $this->assertEquals($flatbase->read()->in('users')->first(), null);
     }
+
+    public function testLimit()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+
+        $users = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setLimit(2)->execute();
+        $this->assertEquals($users->count(), 2);
+
+        $users = $flatbase->read()->in('users')->setLimit(2)->execute();
+        $this->assertEquals($users->count(), 2);
+    }
+
+    public function testOffset()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+
+        $user = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setOffset(1)->first();
+        $this->assertEquals($user['age'], 24);
+
+        $user = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setOffset(2)->first();
+        $this->assertEquals($user['age'], 25);
+
+        $users = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setOffset(1)->get();
+        $this->assertEquals($users->count(), 2);
+
+        $users = $flatbase->read()->in('users')->setOffset(2)->get();
+        $this->assertEquals($users->count(), 2);
+    }
+
+    public function testOffsetAndLimit()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+
+        $users = $flatbase->read()->in('users')->setOffset(1)->setLimit(2)->get();
+        $this->assertEquals($users->first()['age'], 24);
+        $this->assertEquals($users->count(), 2);
+    }
 }
