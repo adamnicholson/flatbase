@@ -16,19 +16,37 @@ class ReadQueryHandler extends QueryHandler
             return $this->handleNoConditionRead($query);
         }
 
+        $returnCollection = new Collection();
+
         $records = $this->read($query->getCollection());
+
+        $matched = 0;
+        $used = 0;
+
         foreach ($records as $key => $record) {
-            if (!$this->recordMatchesQuery($record, $query)) {
-                unset($records[$key]);
+            if ($this->recordMatchesQuery($record, $query)) {
+                $matched++;
+                $used++;
+
+                if ($matched <= $query->getOffset()) {
+                    continue;
+                }
+
+                $returnCollection->append($record);
+
+                if (!is_null($query->getLimit()) && $used >= $query->getLimit()) {
+                    return $returnCollection;
+                }
             }
         }
 
-        return new Collection($records);
+        return $returnCollection;
     }
 
     protected function handleNoConditionRead(ReadQuery $query)
     {
-        $records = $this->read($query->getCollection());
+        // Limit the results
+        $records = array_slice($this->read($query->getCollection()), $query->getOffset(), $query->getLimit());
         return new Collection($records);
     }
 
