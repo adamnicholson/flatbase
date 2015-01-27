@@ -137,4 +137,86 @@ class ReadTest extends FlatbaseTestCase
         $flatbase->delete()->in('users')->execute();
         $this->assertEquals($flatbase->read()->in('users')->first(), null);
     }
+
+    public function testLimit()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+
+        $users = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setLimit(2)->execute();
+        $this->assertEquals($users->count(), 2);
+
+        $users = $flatbase->read()->in('users')->setLimit(2)->execute();
+        $this->assertEquals($users->count(), 2);
+    }
+
+    public function testOffset()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+
+        $user = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setOffset(1)->first();
+        $this->assertEquals($user['age'], 24);
+
+        $user = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setOffset(2)->first();
+        $this->assertEquals($user['age'], 25);
+
+        $users = $flatbase->read()->in('users')->where('name', '==', 'Adam')->setOffset(1)->get();
+        $this->assertEquals($users->count(), 2);
+
+        $users = $flatbase->read()->in('users')->setOffset(2)->get();
+        $this->assertEquals($users->count(), 2);
+    }
+
+    public function testOffsetAndLimit()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+
+        $users = $flatbase->read()->in('users')->setOffset(1)->setLimit(2)->get();
+        $this->assertEquals($users->first()['age'], 24);
+        $this->assertEquals($users->count(), 2);
+    }
+
+    public function testSortOrder()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $users = $flatbase->read()->in('users')->sort('weight')->get();
+        $this->assertEquals($users[0]['weight'], 170);
+        $this->assertEquals($users[1]['weight'], 180);
+        $this->assertEquals($users[2]['weight'], 200);
+        $this->assertEquals($users[3]['weight'], 210);
+    }
+
+    public function testSortOrderDesc()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $users = $flatbase->read()->in('users')->sortDesc('weight')->get();
+        $this->assertEquals($users[0]['weight'], 210);
+        $this->assertEquals($users[1]['weight'], 200);
+        $this->assertEquals($users[2]['weight'], 180);
+        $this->assertEquals($users[3]['weight'], 170);
+    }
+
+    public function testSortWithLimit()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $users = $flatbase->read()->in('users')->sortDesc('weight')->limit(2)->get();
+        $this->assertEquals($users[0]['weight'], 210);
+        $this->assertEquals($users[1]['weight'], 200);
+        $this->assertEquals($users->count(), 2);
+    }
+
+    public function testSortWhenFieldDoesNotAlwaysExist()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $flatbase->update()->in('users')->where('age', '==', 24)->setValues(['foo' => 'bar'])->execute();
+        $users = $flatbase->read()->in('users')->sort('foo')->get();
+        $this->assertEquals($users[3]['foo'], 'bar');
+    }
+
+    public function testSortDescWhenFieldDoesNotAlwaysExist()
+    {
+        $flatbase = $this->getFlatbaseWithSampleData();
+        $flatbase->update()->in('users')->where('age', '==', 24)->setValues(['foo' => 'bar'])->execute();
+        $users = $flatbase->read()->in('users')->sortDesc('foo')->get();
+        $this->assertEquals($users[0]['foo'], 'bar');
+    }
 }

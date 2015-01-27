@@ -7,39 +7,83 @@ use Flatbase\Query\ReadQuery;
 
 class ReadQueryHandler extends QueryHandler
 {
+    /**
+     * Handle a ReadQuery and return the records in a \Flatbase\Collection
+     *
+     * @param ReadQuery $query
+     * @return Collection
+     * @throws \Exception
+     */
     public function handle(ReadQuery $query)
     {
         $this->validateQuery($query);
 
-        // Non-conditional reads
+        // Get all the records matching the given query conditions
+        $records = $this->getAllRecordsMatchingQueryConditions($query);
+
+        // Sort them
+        $this->sortRecords($records, $query);
+        
+        // Limit them
+        $this->limitRecords($records, $query);
+
+        // Return them as a Collection
+        return new Collection($records);
+    }
+
+    /**
+     * Get all the records in a collection matching the Query conditions
+     *
+     * @param ReadQuery $query
+     * @return array
+     */
+    protected function getAllRecordsMatchingQueryConditions(ReadQuery $query)
+    {
+        $records = $this->read($query->getCollection());
+
         if (!$query->getConditions()) {
-            return $this->handleNoConditionRead($query);
+            return $records;
         }
 
-        $records = $this->read($query->getCollection());
         foreach ($records as $key => $record) {
             if (!$this->recordMatchesQuery($record, $query)) {
                 unset($records[$key]);
             }
         }
 
-        return new Collection($records);
+        return $records;
     }
 
-    protected function handleNoConditionRead(ReadQuery $query)
+    /**
+     * Sort an array of records as per by a ReadQuery getSortBy()
+     *
+     * @param $results
+     * @param ReadQuery $query
+     */
+    protected function sortRecords(&$results, ReadQuery $query)
     {
-        $records = $this->read($query->getCollection());
-        return new Collection($records);
-    }
+        if (list($sortField, $sortDirection) = $query->getSortBy()) {
+            usort($results, function ($a, $b) use ($sortField, $sortDirection) {
 
-    protected function isOnlyStrictConditionals(ReadQuery $query)
-    {
-        foreach ($query->getConditions() as $condition) {
-            if ($condition[1] !== '==') {
-                return false;
-            }
+                $leftValue = $this->getRecordField($a, $sortField);
+                $rightValue = $this->getRecordField($b, $sortField);
+
+                if ($sortDirection == 'DESC') {
+                    return strcmp((string) $rightValue, (string) $leftValue);
+                } else {
+                    return strcmp((string) $leftValue, (string) $rightValue);
+                }
+            });
         }
+    }
 
-        return true;
+    /**
+     * Limit an array of records as per a ReadQuery getLimit() and getOffset() options
+     * @param $records
+     * @param ReadQuery $query
+     */
+    protected function limitRecords(&$records, ReadQuery $query)
+    {
+        $records = array_slice($records, $query->getOffset(), $query->getLimit());
     }
 }

@@ -37,25 +37,29 @@ abstract class FlatbaseTestCase extends \PHPUnit_Framework_TestCase
                 'name' => 'Adam',
                 'age' => 23,
                 'height' => "6'3",
-                'company' => 'Foo Inc'
+                'company' => 'Foo Inc',
+                'weight' => 200
             ],
             [
                 'name' => 'Adam',
                 'age' => 24,
                 'height' => "6'4",
-                'company' => 'Foo Inc'
+                'company' => 'Foo Inc',
+                'weight' => 180
             ],
             [
                 'name' => 'Adam',
                 'age' => 25,
                 'height' => "6'5",
-                'company' => 'Bar Inc'
+                'company' => 'Bar Inc',
+                'weight' => 210
             ],
             [
                 'name' => 'Michael',
                 'age' => 26,
                 'height' => "6'6",
-                'company' => 'Foo Inc'
+                'company' => 'Foo Inc',
+                'weight' => 170
             ],
         ];
 

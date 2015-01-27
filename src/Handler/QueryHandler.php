@@ -12,6 +12,14 @@ abstract class QueryHandler
         $this->flatbase = $flatbase;
     }
 
+    /**
+     * Check if a single record should be matched for a given Query's conditions ("where" clauses)
+     *
+     * @param $record
+     * @param Query $query
+     * @return bool
+     * @throws \Exception
+     */
     protected function recordMatchesQuery($record, Query $query)
     {
         $results = [];
@@ -25,6 +33,14 @@ abstract class QueryHandler
         return !$failed;
     }
 
+    /**
+     * Check if a single record should be matched for a single Query condition
+     *
+     * @param $record
+     * @param $condition
+     * @return bool
+     * @throws \Exception
+     */
     protected function assertCondition($record, $condition)
     {
         $left = $condition[0];
@@ -63,11 +79,24 @@ abstract class QueryHandler
         return false;
     }
 
+    /**
+     * Get the value of a field on a record. Defaults to null if not set
+     *
+     * @param $record
+     * @param $field
+     * @return null
+     */
     protected function getRecordField($record, $field)
     {
         return isset($record[$field]) ? $record[$field] : null;
     }
 
+    /**
+     * Validate a Query for execution
+     *
+     * @param Query $query
+     * @throws \Exception
+     */
     protected function validateQuery(Query $query)
     {
         if (!$query->getCollection()) {
