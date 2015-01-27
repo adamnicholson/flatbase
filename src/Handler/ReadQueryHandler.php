@@ -7,57 +7,83 @@ use Flatbase\Query\ReadQuery;
 
 class ReadQueryHandler extends QueryHandler
 {
+    /**
+     * Handle a ReadQuery and return the records in a \Flatbase\Collection
+     *
+     * @param ReadQuery $query
+     * @return Collection
+     * @throws \Exception
+     */
     public function handle(ReadQuery $query)
     {
         $this->validateQuery($query);
 
-        // Non-conditional reads
-        if (!$query->getConditions()) {
-            return $this->handleNoConditionRead($query);
-        }
+        // Get all the records matching the given query conditions
+        $records = $this->getAllRecordsMatchingQueryConditions($query);
 
-        $returnCollection = new Collection();
+        // Sort them
+        $this->sortRecords($records, $query);
+        
+        // Limit them
+        $this->limitRecords($records, $query);
 
-        $records = $this->read($query->getCollection());
-
-        $matched = 0;
-        $used = 0;
-
-        foreach ($records as $key => $record) {
-            if ($this->recordMatchesQuery($record, $query)) {
-                $matched++;
-                $used++;
-
-                if ($matched <= $query->getOffset()) {
-                    continue;
-                }
-
-                $returnCollection->append($record);
-
-                if (!is_null($query->getLimit()) && $used >= $query->getLimit()) {
-                    return $returnCollection;
-                }
-            }
-        }
-
-        return $returnCollection;
-    }
-
-    protected function handleNoConditionRead(ReadQuery $query)
-    {
-        // Limit the results
-        $records = array_slice($this->read($query->getCollection()), $query->getOffset(), $query->getLimit());
+        // Return them as a Collection
         return new Collection($records);
     }
 
-    protected function isOnlyStrictConditionals(ReadQuery $query)
+    /**
+     * Get all the records in a collection matching the Query conditions
+     *
+     * @param ReadQuery $query
+     * @return array
+     */
+    protected function getAllRecordsMatchingQueryConditions(ReadQuery $query)
     {
-        foreach ($query->getConditions() as $condition) {
-            if ($condition[1] !== '==') {
-                return false;
+        $records = $this->read($query->getCollection());
+
+        if (!$query->getConditions()) {
+            return $records;
+        }
+
+        foreach ($records as $key => $record) {
+            if (!$this->recordMatchesQuery($record, $query)) {
+                unset($records[$key]);
             }
         }
 
-        return true;
+        return $records;
+    }
+
+    /**
+     * Sort an array of records as per by a ReadQuery getSortBy()
+     *
+     * @param $results
+     * @param ReadQuery $query
+     */
+    protected function sortRecords(&$results, ReadQuery $query)
+    {
+        if (list($sortField, $sortDirection) = $query->getSortBy()) {
+            usort($results, function ($a, $b) use ($sortField, $sortDirection) {
+
+                $leftValue = $this->getRecordField($a, $sortField);
+                $rightValue = $this->getRecordField($b, $sortField);
+
+                if ($sortDirection == 'DESC') {
+                    return strcmp((string) $rightValue, (string) $leftValue);
+                } else {
+                    return strcmp((string) $leftValue, (string) $rightValue);
+                }
+            });
+        }
+    }
+
+    /**
+     * Limit an array of records as per a ReadQuery getLimit() and getOffset() options
+     * @param $records
+     * @param ReadQuery $query
+     */
+    protected function limitRecords(&$records, ReadQuery $query)
+    {
+        $records = array_slice($records, $query->getOffset(), $query->getLimit());
     }
 }
