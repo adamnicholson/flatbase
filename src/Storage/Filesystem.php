@@ -11,10 +11,6 @@ class Filesystem implements Storage
 
     public function get($key)
     {
-        if (!file_exists($this->getFilename($key))) {
-            $this->set($key, []);
-        }
-
         return unserialize(file_get_contents($this->getFilename($key)));
     }
 
@@ -23,8 +19,15 @@ class Filesystem implements Storage
         file_put_contents($this->getFilename($key), serialize($data));
     }
 
-    protected function getFilename($collection)
+    public function getFilename($collection)
     {
-        return rtrim($this->storageDir, '/') . '/' . $collection;
+        $file = rtrim($this->storageDir, '/') . '/' . $collection;
+
+        if (!file_exists($file)) {
+            file_put_contents($file, serialize([]));
+            chmod($file, 0777);
+        }
+
+        return $file;
     }
 }

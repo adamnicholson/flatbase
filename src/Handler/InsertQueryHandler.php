@@ -14,10 +14,7 @@ class InsertQueryHandler extends QueryHandler
         $this->validateQuery($query);
 
         // Open the file resource
-        $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
-        if (!file_exists($file)) {
-            file_put_contents($file, serialize([]));
-        }
+        $file = $this->flatbase->getStorage()->getFilename($query->getCollection());
         $fp = fopen($file, 'r+');
 
         $count = $this->countItemsInFile($fp);
@@ -45,7 +42,7 @@ class InsertQueryHandler extends QueryHandler
         // declaration. Not sure how to "push" the rest of the characters back so for now we'll
         // just use the legacy way inserting
 
-        $file = $this->flatbase->getStorage()->storageDir . '/' . $query->getCollection();
+        $file = $this->flatbase->getStorage()->getFilename($query->getCollection());
         $serialized = file_get_contents($file);
         $this->appendToSerializedString($serialized, $query->getValues());
         file_put_contents($file, $serialized);
