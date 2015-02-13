@@ -10,34 +10,15 @@ class ReadTest extends FlatbaseTestCase
 {
     public function testReadWithNoConditions()
     {
-        $flatbase = $this->getFlatbaseWithSampleData();
-        $query = new ReadQuery();
-        $query->setCollection('users');
-        $collection = $flatbase->execute($query);
-        $this->assertEquals($collection->count(), 4);
+        $this->assertEquals($this->getFlatbaseWithSampleData()->read()->in('users')->count(), 4);
     }
 
     public function testReadWithSingleEqualsCondition()
     {
         $flatbase = $this->getFlatbaseWithSampleData();
-        // New query
-        $query = new ReadQuery();
-        $query->setCollection('users');
-        $query->addCondition('age', '=', 24);
-        $collection = $flatbase->execute($query);
-        $this->assertEquals($collection->count(), 1);
-        // New query
-        $query = new ReadQuery();
-        $query->setCollection('users');
-        $query->addCondition('name', '=', 'Adam');
-        $collection = $flatbase->execute($query);
-        $this->assertEquals($collection->count(), 3);
-        // New query
-        $query = new ReadQuery();
-        $query->setCollection('users');
-        $query->addCondition('height', '=', "6'4");
-        $collection = $flatbase->execute($query);
-        $this->assertEquals($collection->count(), 1);
+        $this->assertEquals($flatbase->read()->in('users')->where('age', '=', 24)->count(), 1);
+        $this->assertEquals($flatbase->read()->in('users')->where('name', '=', 'Adam')->count(), 3);
+        $this->assertEquals($flatbase->read()->in('users')->where('height', '=', "6'4")->count(), 1);
     }
 
     public function testReadWithMultipleEqualsConditions()
