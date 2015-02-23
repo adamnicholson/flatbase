@@ -11,4 +11,10 @@ interface Storage
     public function get($key);
 
     public function set($key, $data);
+
+    /**
+     * @param $collection
+     * @return \PHPSerializer\SerializedArray
+     */
+    public function getIterator($collection);
 }

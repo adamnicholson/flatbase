@@ -6,7 +6,15 @@
             "email": "adamnicholson10@gmail.com"
         }
     ],
-    "require": {},
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:adamnicholson/php-serializer.git"
+        }
+    ],
+    "require": {
+        "php-serializer/php-serializer": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "Flatbase\\": ["src/", "tests/"]

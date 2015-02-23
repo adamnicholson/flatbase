@@ -6,7 +6,7 @@ use Flatbase\Storage\Filesystem;
 use Flatbase\Flatbase;
 
 // Setup the database to read from
-$databaseSize = 10000;
+$databaseSize = 1000;
 echo 'Setting up database with ' . number_format($databaseSize) . ' records' . PHP_EOL;
 $data = [];
 for ($i=0; $i<=$databaseSize; $i++) {
@@ -21,11 +21,9 @@ $bench->start();
 echo "Starting reads" . PHP_EOL;
 $flatbase = new Flatbase(new Filesystem(__DIR__ . '/storage'));
 
-$limit = 100;
+$limit = 50;
 for ($i = 0; $i <= $limit; $i++) {
-    $insertQuery = new \Flatbase\Query\ReadQuery();
-    $insertQuery->setCollection('test-read-collection');
-    $flatbase->execute($insertQuery);
+    $flatbase->read()->in('test-read-collection')->get();
 }
 
 // Stop the clock

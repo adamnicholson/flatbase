@@ -103,7 +103,7 @@ class Flatbase
     }
 
     /**
-     * @return Storage
+     * @return \Flatbase\Storage\Filesystem
      */
     public function getStorage()
     {

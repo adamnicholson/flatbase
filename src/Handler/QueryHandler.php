@@ -109,6 +109,11 @@ abstract class QueryHandler
         return $this->flatbase->getStorage()->get($collection);
     }
 
+    protected function getIterator($collection)
+    {
+        return $this->flatbase->getStorage()->getIterator($collection);
+    }
+
     protected function write($collection, $data)
     {
         $this->flatbase->getStorage()->set($collection, $data);

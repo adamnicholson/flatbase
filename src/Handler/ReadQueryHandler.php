@@ -39,6 +39,14 @@ class ReadQueryHandler extends QueryHandler
      */
     protected function getAllRecordsMatchingQueryConditions(ReadQuery $query)
     {
+        if (!$query->getConditions()) {
+            $collection = [];
+            foreach ($this->getIterator($query->getCollection()) as $record) {
+                $collection[] = $record;
+            }
+            return $collection;
+        }
+
         $records = $this->read($query->getCollection());
 
         if (!$query->getConditions()) {

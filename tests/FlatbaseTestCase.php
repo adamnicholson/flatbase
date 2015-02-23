@@ -28,9 +28,8 @@ abstract class FlatbaseTestCase extends \PHPUnit_Framework_TestCase
         $flatbase = $this->getFlatbase();
 
         // Empty it
-        $deleteQuery = new DeleteQuery();
-        $deleteQuery->setCollection('users');
-        $flatbase->execute($deleteQuery);
+        $file = $flatbase->getStorage()->getFilename('users');
+        unlink($file);
 
         $data = [
             [
@@ -64,10 +63,10 @@ abstract class FlatbaseTestCase extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($data as $record) {
-            $query = new InsertQuery();
-            $query->setCollection('users');
-            $query->setValues($record);
-            $flatbase->execute($query);
+            $flatbase->insert()
+                ->in('users')
+                ->setValues($record)
+                ->execute();
         }
 
         return $flatbase;
