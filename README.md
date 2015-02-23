@@ -14,6 +14,8 @@ Flatbase is *not* intended to be a replacement for "real" database engines. If y
 
 ## Basic Usage
 
+    <?php
+
     $storage = new Flatbase\Storage\Filesystem('/path/to/storage/dir');
     $flatbase = new Flatbase\Flatbase($storage);
     
@@ -41,6 +43,8 @@ Flatbase is *not* intended to be a replacement for "real" database engines. If y
 ## The syntax
 
 All Flatbase features follow the same API:
+
+    <?php
 
     // Create a query object with either read(), update(), delete() or insert()
     $query = $flatbase->read();
@@ -74,6 +78,8 @@ Flatbase is schema-less, so you don't have to worry about writing migration scri
 
 #### Store plain old PHP objects
 Data is stored in a native PHP serialized array using [PHPSerializer](https://github.com/adamnicholson/php-serializer). This means that you can store plain old PHP objects straight in the database:
+
+    <?php
 
     $flatbase->insert()->in('users')->setValues([
         'id' => 1,
