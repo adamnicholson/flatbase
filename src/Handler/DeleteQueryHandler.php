@@ -9,10 +9,9 @@ class DeleteQueryHandler extends QueryHandler
 {
     public function handle(DeleteQuery $query)
     {
-        // Validate the query
         $this->validateQuery($query);
 
-        $stream = $this->flatbase->getStorage()->getIterator($query->getCollection());
+        $stream = $this->getIterator($query->getCollection());
 
         foreach ($stream as $record) {
             if ($this->recordMatchesQuery($record, $query)) {

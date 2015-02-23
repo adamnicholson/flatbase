@@ -4,6 +4,7 @@ namespace Flatbase\Handler;
 
 use Flatbase\Flatbase;
 use Flatbase\Query\Query;
+use PHPSerializer\SerializedArray;
 
 abstract class QueryHandler
 {
@@ -75,8 +76,6 @@ abstract class QueryHandler
             default:
                 throw new \Exception('Operator [' . $op . '] is not supported');
         }
-
-        return false;
     }
 
     /**
@@ -104,18 +103,14 @@ abstract class QueryHandler
         }
     }
 
-    protected function read($collection)
+    /**
+     * Get a SerializedArray instance for the collection
+     *
+     * @param $collection
+     * @return SerializedArray
+     */
+    public function getIterator($collection)
     {
-        return $this->flatbase->getStorage()->get($collection);
-    }
-
-    protected function getIterator($collection)
-    {
-        return $this->flatbase->getStorage()->getIterator($collection);
-    }
-
-    protected function write($collection, $data)
-    {
-        $this->flatbase->getStorage()->set($collection, $data);
+        return new SerializedArray($this->flatbase->getStorage()->getFileObject($collection));
     }
 }

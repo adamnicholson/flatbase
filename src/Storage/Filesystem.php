@@ -2,8 +2,6 @@
 
 namespace Flatbase\Storage;
 
-use PHPSerializer\SerializedArray;
-
 class Filesystem implements Storage
 {
     function __construct($storageDir)
@@ -11,17 +9,24 @@ class Filesystem implements Storage
         $this->storageDir = $storageDir;
     }
 
-    public function get($key)
+    /**
+     * @param $collection
+     * @return \SplFileObject
+     */
+    public function getFileObject($collection)
     {
-        return unserialize(file_get_contents($this->getFilename($key)));
+        $file = $this->getFilename($collection);
+
+        return new \SplFileObject($file, 'r+');
     }
 
-    public function set($key, $data)
-    {
-        file_put_contents($this->getFilename($key), serialize($data));
-    }
-
-    public function getFilename($collection)
+    /**
+     * Get the corresponding file path for a given collection
+     *
+     * @param $collection
+     * @return string
+     */
+    protected function getFilename($collection)
     {
         $file = rtrim($this->storageDir, '/') . '/' . $collection;
 
@@ -31,18 +36,5 @@ class Filesystem implements Storage
         }
 
         return $file;
-    }
-
-    /**
-     * @param $collection
-     * @return mixed|SerializedArray
-     */
-    public function getIterator($collection)
-    {
-        $file = $this->getFilename($collection);
-
-        $file = new \SplFileObject($file, 'r+');
-
-        return new SerializedArray($file);
     }
 }
