@@ -13,7 +13,8 @@
         }
     ],
     "require": {
-        "php-serializer/php-serializer": "dev-master"
+        "php-serializer/php-serializer": "dev-master",
+        "phpunit/phpunit": "~4.5"
     },
     "autoload": {
         "psr-4": {
