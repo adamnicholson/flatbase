@@ -14,27 +14,28 @@ Flatbase is *not* intended to be a replacement for "real" database engines. If y
 
 ## Basic Usage
 
-    <?php
+```php
+<?php
 
-    $storage = new Flatbase\Storage\Filesystem('/path/to/storage/dir');
-    $flatbase = new Flatbase\Flatbase($storage);
-    
-    $flatbase->insert()->in('users')
-        ->setValues(['name' => 'Adam', 'height' => "6'4"])
-        ->execute();
-    
-    $flatbase->read()->in('users')
-        ->where('name', '=', 'Adam')
-        ->first(); 
-    // (array) ['name' => 'Adam', 'height' => "6'4"]
-    
-    $flatbase->read()->in('users')->count();
-    // (int) 1
-    
-    $flatbase->update()->in('users')->where('age', '==', "6'4")->setValues(['name' => 'Joe'])->execute();
-    
-    $flatbase->delete()->in('users')->execute();
-    
+$storage = new Flatbase\Storage\Filesystem('/path/to/storage/dir');
+$flatbase = new Flatbase\Flatbase($storage);
+
+$flatbase->insert()->in('users')
+    ->setValues(['name' => 'Adam', 'height' => "6'4"])
+    ->execute();
+
+$flatbase->read()->in('users')
+    ->where('name', '=', 'Adam')
+    ->first();
+// (array) ['name' => 'Adam', 'height' => "6'4"]
+
+$flatbase->read()->in('users')->count();
+// (int) 1
+
+$flatbase->update()->in('users')->where('age', '==', "6'4")->setValues(['name' => 'Joe'])->execute();
+
+$flatbase->delete()->in('users')->execute();
+```
     
 ## Installation
 
@@ -44,25 +45,25 @@ Flatbase is *not* intended to be a replacement for "real" database engines. If y
 
 All Flatbase features follow the same API:
 
-    <?php
 
-    // Create a query object with either read(), update(), delete() or insert()
-    $query = $flatbase->read();
-    
-    // Set the collection we're working with. in() is an alias of setCollection()
-    $query->in('users');
-    
-    // Optionally add some where clauses - as many as you like.
-    $query->where('user_id', '=', 1);
-    $query->where('age', '<', 28);
-    
-    // If this were an update or insert, add some values
-    // $query->setValues(['name' => 'Adam']);
-    
-    // Execute the query. $query->get() is an alias of $query->execute();
-    // This returns an ArrayObject instance
-    $collection = $query->get();
-    
+```php
+// Create a query object with either read(), update(), delete() or insert()
+$query = $flatbase->read();
+
+// Set the collection we're working with. in() is an alias of setCollection()
+$query->in('users');
+
+// Optionally add some where clauses - as many as you like.
+$query->where('user_id', '=', 1);
+$query->where('age', '<', 28);
+
+// If this were an update or insert, add some values
+// $query->setValues(['name' => 'Adam']);
+
+// Execute the query. $query->get() is an alias of $query->execute();
+// This returns an ArrayObject instance
+$collection = $query->get();
+```
     
 
 
@@ -79,16 +80,16 @@ Flatbase is schema-less, so you don't have to worry about writing migration scri
 #### Store plain old PHP objects
 Data is stored in a native PHP serialized array using [PHPSerializer](https://github.com/adamnicholson/php-serializer). This means that you can store plain old PHP objects straight in the database:
 
-    <?php
+```php
+$flatbase->insert()->in('users')->setValues([
+    'id' => 1,
+    'name' => 'Adam',
+    'added' => new DateTime()
+])->execute();
 
-    $flatbase->insert()->in('users')->setValues([
-        'id' => 1,
-        'name' => 'Adam',
-        'added' => new DateTime()
-    ])->execute();
-    
-    $record = $flatbase->read()->in('users')->where('id', '==', 1)->first();
-    var_dump($record['added']); // DateTime
+$record = $flatbase->read()->in('users')->where('id', '==', 1)->first();
+var_dump($record['added']); // DateTime
+```
     
 It also means that you can, at any point, easily unserialize() your data without having to go through Flatbase if you wish. 
     
