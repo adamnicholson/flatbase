@@ -1,5 +1,6 @@
 {
     "name": "flatbase/flatbase",
+    "description": "Standalone queryable flat file database",
     "authors": [
         {
             "name": "Adam Nicholson",
