@@ -1,14 +1,12 @@
 # Flatbase
 
-> In active development. Use with caution
-
 Flatbase is a flat file database written in PHP which aims to be:
 
 - Lightweight
 - Very easy to install, with minimal configuration
 - Simple intuitive API
 - Suitable for small data sets
-- Suitable for testing or prototyping
+- Suitable for testing & prototyping
 
 Flatbase is *not* intended to be a replacement for "real" database engines. If you're storing sensitive data in a production environment then this probably isn't for you.
 
@@ -39,7 +37,7 @@ $flatbase->delete()->in('users')->execute();
     
 ## Installation
 
-@todo
+    composer require flatbase/flatbase
     
 ## The syntax
 
