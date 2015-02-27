@@ -4,6 +4,11 @@ namespace Flatbase\Storage;
 
 class Filesystem implements Storage
 {
+    /**
+     * @var string
+     */
+    protected $storageDir;
+
     function __construct($storageDir)
     {
         $this->storageDir = $storageDir;

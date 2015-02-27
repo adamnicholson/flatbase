@@ -8,6 +8,11 @@ use PHPSerializer\SerializedArray;
 
 abstract class QueryHandler
 {
+    /**
+     * @var \Flatbase\Flatbase
+     */
+    protected $flatbase;
+
     public function __construct(Flatbase $flatbase)
     {
         $this->flatbase = $flatbase;

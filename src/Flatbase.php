@@ -15,6 +15,11 @@ use Flatbase\Storage\Storage;
 
 class Flatbase
 {
+    /**
+     * @var \Flatbase\Storage\Storage
+     */
+    protected $storage;
+
     public function __construct(Storage $storage)
     {
         $this->storage = $storage;
