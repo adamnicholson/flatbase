@@ -15,7 +15,9 @@
     ],
     "require": {
         "php-serializer/php-serializer": "dev-master",
-        "phpunit/phpunit": "~4.5"
+        "phpunit/phpunit": "~4.5",
+        "symfony/console": "~2.6",
+        "symfony/var-dumper": "~2.6"
     },
     "autoload": {
         "psr-4": {
