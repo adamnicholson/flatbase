@@ -4,32 +4,38 @@ namespace Flatbase\Console\Commands;
 
 use Flatbase\Flatbase;
 use Flatbase\Storage\Filesystem;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\VarDumper;
 
-class ReadCommand extends Command
+class ReadCommand extends AbstractCommand
 {
-    private $dumper;
+    /**
+     * @var VarCloner
+     */
+    protected $cloner;
+    /**
+     * @var CliDumper
+     */
+    protected $dumper;
     /**
      * @var InputInterface
      */
-    private $input;
+    protected $input;
     /**
      * @var OutputInterface
      */
-    private $output;
+    protected $output;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->dumper = new VarDumper();
+        $this->cloner = new VarCloner();
+        $this->dumper = new CliDumper();
     }
 
     /**
@@ -55,9 +61,6 @@ class ReadCommand extends Command
         $this->input = $input;
         $this->output = $output;
 
-        $cloner = new VarCloner();
-        $dumper = new CliDumper();
-
         // Fetch the records
         $records = $this->buildQuery($input)->get();
 
@@ -69,7 +72,7 @@ class ReadCommand extends Command
         }
 
         foreach ($records as $record) {
-            $dumper->dump($cloner->cloneVar($record));
+            $this->dumper->dump($this->cloner->cloneVar($record));
         }
     }
 
@@ -90,13 +93,15 @@ class ReadCommand extends Command
      */
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('read')
             ->setDescription('Read from a collection')
             ->addArgument(
                 'collection',
                 InputArgument::REQUIRED,
-                'The collection to read from'
+                'The collection to use'
             )
             ->addOption(
                 'count',
@@ -104,49 +109,6 @@ class ReadCommand extends Command
                 InputOption::VALUE_NONE,
                 'If set, only the record count will be output'
             )
-            ->addOption(
-                'path',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Path of the database storage dir'
-            )
-            ->addOption(
-                'config',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Path to a flatbase.json configuration file'
-            )
         ;
-    }
-
-    private function getStoragePath()
-    {
-        if ($override = $this->input->getOption('path')) {
-            return $override;
-        }
-        $config = $this->getConfig();
-
-        return getcwd() . '/' . $config->path;
-    }
-
-    /**
-     * Get the config data
-     *
-     * @return \stdClass
-     */
-    private function getConfig()
-    {
-        $configPath = $this->input->getOption('config') ?: (getcwd() . '/flatbase.json');
-
-        $defaults = new \stdClass();
-        $defaults->path = null;
-
-        if (file_exists($configPath)) {
-            foreach (json_decode(file_get_contents($configPath)) as $property => $value) {
-                $defaults->{$property} = $value;
-            }
-        }
-
-        return $defaults;
     }
 }
