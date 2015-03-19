@@ -16,6 +16,14 @@ use Symfony\Component\VarDumper\VarDumper;
 class ReadCommand extends Command
 {
     private $dumper;
+    /**
+     * @var InputInterface
+     */
+    private $input;
+    /**
+     * @var OutputInterface
+     */
+    private $output;
 
     public function __construct()
     {
@@ -44,6 +52,9 @@ class ReadCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->input = $input;
+        $this->output = $output;
+
         $cloner = new VarCloner();
         $dumper = new CliDumper();
 
@@ -68,7 +79,7 @@ class ReadCommand extends Command
      */
     private function buildQuery(InputInterface $input)
     {
-        $flatbase = new Flatbase(new Filesystem($input->getArgument('database-path')));
+        $flatbase = new Flatbase(new Filesystem($this->getStoragePath()));
 
         return $flatbase->read()
             ->in($input->getArgument('collection'));
@@ -83,21 +94,59 @@ class ReadCommand extends Command
             ->setName('read')
             ->setDescription('Read from a collection')
             ->addArgument(
-                'database-path',
-                InputArgument::REQUIRED,
-                'The collection to read from'
-            )
-            ->addArgument(
                 'collection',
                 InputArgument::REQUIRED,
                 'The collection to read from'
             )
             ->addOption(
                 'count',
-                'c',
+                null,
                 InputOption::VALUE_NONE,
                 'If set, only the record count will be output'
             )
+            ->addOption(
+                'path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Path of the database storage dir'
+            )
+            ->addOption(
+                'config',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Path to a flatbase.json configuration file'
+            )
         ;
+    }
+
+    private function getStoragePath()
+    {
+        if ($override = $this->input->getOption('path')) {
+            return $override;
+        }
+        $config = $this->getConfig();
+
+        return getcwd() . '/' . $config->path;
+    }
+
+    /**
+     * Get the config data
+     *
+     * @return \stdClass
+     */
+    private function getConfig()
+    {
+        $configPath = $this->input->getOption('config') ?: (getcwd() . '/flatbase.json');
+
+        $defaults = new \stdClass();
+        $defaults->path = null;
+
+        if (file_exists($configPath)) {
+            foreach (json_decode(file_get_contents($configPath)) as $property => $value) {
+                $defaults->{$property} = $value;
+            }
+        }
+
+        return $defaults;
     }
 }
