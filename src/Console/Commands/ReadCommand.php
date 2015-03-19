@@ -84,8 +84,15 @@ class ReadCommand extends AbstractCommand
     {
         $flatbase = new Flatbase(new Filesystem($this->getStoragePath()));
 
-        return $flatbase->read()
-            ->in($input->getArgument('collection'));
+        $query = $flatbase->read()->in($input->getArgument('collection'));
+
+        foreach ($this->input->getOption('where') as $where) {
+            list($l, $op, $r) = explode(',', $where);
+
+            $query->where($l, $op, $r);
+        }
+
+        return $query;
     }
 
     /**
@@ -108,6 +115,13 @@ class ReadCommand extends AbstractCommand
                 null,
                 InputOption::VALUE_NONE,
                 'If set, only the record count will be output'
+            )
+            ->addOption(
+                'where',
+                null,
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
+                'Where',
+                []
             )
         ;
     }
