@@ -29,6 +29,10 @@ class ReadCommand extends AbstractCommand
      * @var OutputInterface
      */
     protected $output;
+    /**
+     * @var callable
+     */
+    protected $factory;
 
     public function __construct()
     {
@@ -124,5 +128,27 @@ class ReadCommand extends AbstractCommand
                 []
             )
         ;
+    }
+
+    /**
+     * Testing method
+     *
+     * @return Flatbase
+     */
+    private function getFlatbase($storagePath)
+    {
+        $factory = $this->factory;
+
+        return $factory($storagePath);
+    }
+
+    /**
+     * Testing method
+     *
+     * @param callable $factory
+     */
+    public function setFlatbaseFactory(callable $factory)
+    {
+        $this->factory = $factory;
     }
 }

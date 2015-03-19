@@ -3,14 +3,14 @@
 
 foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
     if (file_exists($file)) {
-        define('COMPOSER_AUTOLOAD_PATH', $file);
+        $autoloadPath = $file;
         break;
     }
 }
 
 unset($file);
 
-if (!defined('COMPOSER_AUTOLOAD_PATH')) {
+if (!isset($autoloadPath)) {
     fwrite(STDERR,
         'You need to set up the project dependencies using the following commands:' . PHP_EOL .
         'wget http://getcomposer.org/composer.phar' . PHP_EOL .
@@ -19,7 +19,7 @@ if (!defined('COMPOSER_AUTOLOAD_PATH')) {
     die(1);
 }
 
-require COMPOSER_AUTOLOAD_PATH;
+require $autoloadPath;
 
 $console = new \Symfony\Component\Console\Application('flatbase');
 $console->add(new \Flatbase\Console\Commands\ReadCommand());
