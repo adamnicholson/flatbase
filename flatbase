@@ -29,4 +29,5 @@ $console->add(new \Flatbase\Console\Commands\ReadCommand(
 ));
 $console->add(new \Flatbase\Console\Commands\InsertCommand());
 $console->add(new \Flatbase\Console\Commands\DeleteCommand());
+$console->add(new \Flatbase\Console\Commands\UpdateCommand());
 $console->run();

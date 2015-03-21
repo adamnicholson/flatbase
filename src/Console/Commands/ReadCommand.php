@@ -63,7 +63,13 @@ class ReadCommand extends AbstractCommand
         $query = $flatbase->read()->in($input->getArgument('collection'));
 
         foreach ($this->input->getOption('where') as $where) {
-            list($l, $op, $r) = explode(',', $where);
+            $splode = explode(',', $where);
+
+            if (count($splode) !== 3) {
+                throw new \InvalidArgumentException('Each --where must be passed a string in the format "{key},{operator},{value}. Eg. --where "name,==,Adam"');
+            }
+
+            list($l, $op, $r) = $splode;
 
             $query->where($l, $op, $r);
         }
