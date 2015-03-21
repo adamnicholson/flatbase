@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 abstract class AbstractCommand extends Command
 {
     /**
-     * Configures the current command.
+     * @{inheritdoc}
      */
     protected function configure()
     {
@@ -30,6 +30,11 @@ abstract class AbstractCommand extends Command
         ;
     }
 
+    /**
+     * Get the Flatbase storage path from the --path console option
+     *
+     * @return string
+     */
     protected function getStoragePath()
     {
         if ($override = $this->input->getOption('path')) {

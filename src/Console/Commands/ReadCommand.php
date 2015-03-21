@@ -2,7 +2,6 @@
 
 namespace Flatbase\Console\Commands;
 
-use Flatbase\Console\Dumper;
 use Flatbase\Flatbase;
 use Flatbase\Storage\Filesystem;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,11 +16,11 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 class ReadCommand extends AbstractCommand
 {
     /**
-     * @var VarCloner
+     * @var ClonerInterface
      */
     protected $cloner;
     /**
-     * @var CliDumper
+     * @var DumperInterface
      */
     protected $dumper;
     /**
@@ -46,21 +45,7 @@ class ReadCommand extends AbstractCommand
     }
 
     /**
-     * Executes the current command.
-     *
-     * This method is not abstract because you can use this class
-     * as a concrete class. In this case, instead of defining the
-     * execute() method, you set the code to execute by passing
-     * a Closure to the setCode() method.
-     *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return null|int null or 0 if everything went fine, or an error code
-     *
-     * @throws \LogicException When this abstract method is not implemented
-     *
-     * @see setCode()
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -124,7 +109,7 @@ class ReadCommand extends AbstractCommand
     }
 
     /**
-     * Configures the current command.
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -185,7 +170,7 @@ class ReadCommand extends AbstractCommand
     }
 
     /**
-     * Testing method
+     * Get a Flatbase object for a given storage path.
      *
      * @return Flatbase
      */
