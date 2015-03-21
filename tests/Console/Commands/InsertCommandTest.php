@@ -2,18 +2,11 @@
 
 namespace Flatbase\Console\Commands;
 
-use Flatbase\Collection;
-use Flatbase\Console\Dumper;
 use Flatbase\FlatbaseTestCase;
 use Flatbase\Query\InsertQuery;
-use Flatbase\Query\ReadQuery;
 use Prophecy\Argument;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class InsertCommandTest extends FlatbaseTestCase
 {

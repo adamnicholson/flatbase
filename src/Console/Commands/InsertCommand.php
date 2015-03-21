@@ -2,40 +2,12 @@
 
 namespace Flatbase\Console\Commands;
 
-use Flatbase\Flatbase;
-use Flatbase\Storage\Filesystem;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\VarDumper\Cloner\ClonerInterface;
-use Symfony\Component\VarDumper\Cloner\DumperInterface;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 class InsertCommand extends AbstractCommand
 {
-    /**
-     * @var ClonerInterface
-     */
-    protected $cloner;
-    /**
-     * @var DumperInterface
-     */
-    protected $dumper;
-    /**
-     * @var InputInterface
-     */
-    protected $input;
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
-    /**
-     * @var callable
-     */
-    protected $factory;
-
     /**
      * {@inheritdoc}
      */
@@ -47,7 +19,7 @@ class InsertCommand extends AbstractCommand
         $this->buildQuery($input)->execute();
 
         // Write out the count
-        $output->writeln('Delete query executed');
+        $output->writeln('<info>Insert query executed</info>');
     }
 
     /**
@@ -63,7 +35,7 @@ class InsertCommand extends AbstractCommand
         foreach ($input->getArgument('set') as $value) {
             $splode = explode('=', $value);
             if (count($splode) !== 2) {
-                throw new \InvalidArgumentException('--set can only be passed a string with a single equals sign formatted as "key=value"');
+                throw new \InvalidArgumentException('Each value set must be passed a string with a single key-value pair formatted as "key=value". Eg. "flatbase insert users name=Adam created=Monday age=25"');
             }
             $values[$splode[0]] = $splode[1];
         }
@@ -83,7 +55,7 @@ class InsertCommand extends AbstractCommand
             ->addArgument(
                 'collection',
                 InputArgument::REQUIRED,
-                'Name of the collection to insert into from'
+                'Name of the collection to insert into'
             )
             ->addArgument(
                 'set',

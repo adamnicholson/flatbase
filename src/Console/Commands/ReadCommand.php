@@ -8,7 +8,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\VarDumper\Cloner\ClonerInterface;
-use Symfony\Component\VarDumper\Cloner\DumperInterface;
 
 class ReadCommand extends AbstractCommand
 {
@@ -43,7 +42,7 @@ class ReadCommand extends AbstractCommand
         $records = $this->buildQuery($input)->get();
 
         // Write out the count
-        $output->writeln('Found ' . $records->count() . ' records');
+        $output->writeln('<info>Found ' . $records->count() . ' records</info>');
 
         if ($input->getOption('count')) {
             return;
