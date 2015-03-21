@@ -61,7 +61,6 @@ class ReadCommand extends AbstractCommand
      * @throws \LogicException When this abstract method is not implemented
      *
      * @see setCode()
-     * @todo Write CliDumper output to OutputInterface rather than globally
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
