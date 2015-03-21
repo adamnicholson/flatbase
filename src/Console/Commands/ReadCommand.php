@@ -2,12 +2,15 @@
 
 namespace Flatbase\Console\Commands;
 
+use Flatbase\Console\Dumper;
 use Flatbase\Flatbase;
 use Flatbase\Storage\Filesystem;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\VarDumper\Cloner\ClonerInterface;
+use Symfony\Component\VarDumper\Cloner\DumperInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 
@@ -34,12 +37,12 @@ class ReadCommand extends AbstractCommand
      */
     protected $factory;
 
-    public function __construct()
+    public function __construct(ClonerInterface $cloner, DumperInterface $dumper)
     {
         parent::__construct();
 
-        $this->cloner = new VarCloner();
-        $this->dumper = new CliDumper();
+        $this->cloner = $cloner;
+        $this->dumper = $dumper;
     }
 
     /**
@@ -65,6 +68,8 @@ class ReadCommand extends AbstractCommand
         $this->input = $input;
         $this->output = $output;
 
+        $this->dumper->setOutputInterface($output);
+
         // Fetch the records
         $records = $this->buildQuery($input)->get();
 
@@ -86,7 +91,7 @@ class ReadCommand extends AbstractCommand
      */
     private function buildQuery(InputInterface $input)
     {
-        $flatbase = new Flatbase(new Filesystem($this->getStoragePath()));
+        $flatbase = $this->getFlatbase($this->getStoragePath());
 
         $query = $flatbase->read()->in($input->getArgument('collection'));
 
@@ -104,8 +109,6 @@ class ReadCommand extends AbstractCommand
      */
     protected function configure()
     {
-        parent::configure();
-
         $this
             ->setName('read')
             ->setDescription('Read from a collection')
@@ -115,19 +118,21 @@ class ReadCommand extends AbstractCommand
                 'The collection to use'
             )
             ->addOption(
-                'count',
-                null,
-                InputOption::VALUE_NONE,
-                'If set, only the record count will be output'
-            )
-            ->addOption(
                 'where',
                 null,
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
                 'Where',
                 []
             )
+            ->addOption(
+                'count',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, only the record count will be output'
+            )
         ;
+
+        parent::configure();
     }
 
     /**
@@ -139,7 +144,7 @@ class ReadCommand extends AbstractCommand
     {
         $factory = $this->factory;
 
-        return $factory($storagePath);
+        return $factory ? $factory($storagePath) : new Flatbase(new Filesystem($storagePath));
     }
 
     /**

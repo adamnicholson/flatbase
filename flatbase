@@ -21,6 +21,10 @@ if (!isset($autoloadPath)) {
 
 require $autoloadPath;
 
+// @TODO Move bootstrapping to separate file
 $console = new \Symfony\Component\Console\Application('flatbase');
-$console->add(new \Flatbase\Console\Commands\ReadCommand());
+$console->add(new \Flatbase\Console\Commands\ReadCommand(
+        new \Symfony\Component\VarDumper\Cloner\VarCloner(),
+        new \Flatbase\Console\Dumper())
+);
 $console->run();

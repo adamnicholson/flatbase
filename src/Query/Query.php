@@ -13,7 +13,9 @@ abstract class Query
 
     public function __construct(Flatbase $flatbase = null)
     {
-        $this->flatbase = $flatbase;
+        if ($flatbase) {
+            $this->setFlatbase($flatbase);
+        }
     }
 
     /**
@@ -98,6 +100,14 @@ abstract class Query
         }
 
         return $this->flatbase->execute($this);
+    }
+
+    /**
+     * @param Flatbase $flatbase
+     */
+    public function setFlatbase(Flatbase $flatbase)
+    {
+        $this->flatbase = $flatbase;
     }
 
     /**
