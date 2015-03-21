@@ -2,16 +2,13 @@
 
 namespace Flatbase\Console\Commands;
 
-use Flatbase\Flatbase;
-use Flatbase\Storage\Filesystem;
+use Flatbase\Console\Dumper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\VarDumper\Cloner\ClonerInterface;
 use Symfony\Component\VarDumper\Cloner\DumperInterface;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 class ReadCommand extends AbstractCommand
 {
@@ -20,23 +17,11 @@ class ReadCommand extends AbstractCommand
      */
     protected $cloner;
     /**
-     * @var DumperInterface
+     * @var \Flatbase\Console\Dumper
      */
     protected $dumper;
-    /**
-     * @var InputInterface
-     */
-    protected $input;
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
-    /**
-     * @var callable
-     */
-    protected $factory;
 
-    public function __construct(ClonerInterface $cloner, DumperInterface $dumper)
+    public function __construct(ClonerInterface $cloner, Dumper $dumper)
     {
         parent::__construct();
 
@@ -73,10 +58,9 @@ class ReadCommand extends AbstractCommand
      * @param InputInterface $input
      * @return \Flatbase\Query\ReadQuery
      */
-    private function buildQuery(InputInterface $input)
+    protected function buildQuery(InputInterface $input)
     {
         $flatbase = $this->getFlatbase($this->getStoragePath());
-
         $query = $flatbase->read()->in($input->getArgument('collection'));
 
         foreach ($this->input->getOption('where') as $where) {
@@ -119,7 +103,7 @@ class ReadCommand extends AbstractCommand
             ->addArgument(
                 'collection',
                 InputArgument::REQUIRED,
-                'The collection to use'
+                'Name of the collection to read from'
             )
             ->addOption(
                 'where',
@@ -167,27 +151,5 @@ class ReadCommand extends AbstractCommand
         ;
 
         parent::configure();
-    }
-
-    /**
-     * Get a Flatbase object for a given storage path.
-     *
-     * @return Flatbase
-     */
-    private function getFlatbase($storagePath)
-    {
-        $factory = $this->factory;
-
-        return $factory ? $factory($storagePath) : new Flatbase(new Filesystem($storagePath));
-    }
-
-    /**
-     * Testing method
-     *
-     * @param callable $factory
-     */
-    public function setFlatbaseFactory(callable $factory)
-    {
-        $this->factory = $factory;
     }
 }

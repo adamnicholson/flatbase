@@ -2,11 +2,28 @@
 
 namespace Flatbase\Console\Commands;
 
+use Flatbase\Flatbase;
+use Flatbase\Query\Query;
+use Flatbase\Storage\Filesystem;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 abstract class AbstractCommand extends Command
 {
+    /**
+     * @var InputInterface
+     */
+    protected $input;
+    /**
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
+    protected $output;
+    /**
+     * @var callable
+     */
+    protected $factory;
+
     /**
      * @{inheritdoc}
      */
@@ -64,5 +81,27 @@ abstract class AbstractCommand extends Command
         }
 
         return $defaults;
+    }
+
+    /**
+     * Get a Flatbase object for a given storage path.
+     *
+     * @return Flatbase
+     */
+    protected function getFlatbase($storagePath)
+    {
+        $factory = $this->factory;
+
+        return $factory ? $factory($storagePath) : new Flatbase(new Filesystem($storagePath));
+    }
+
+    /**
+     * Testing method
+     *
+     * @param callable $factory
+     */
+    public function setFlatbaseFactory(callable $factory)
+    {
+        $this->factory = $factory;
     }
 }
