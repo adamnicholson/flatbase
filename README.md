@@ -32,38 +32,106 @@ $flatbase->read()->in('users')
 ## Installation
 
     composer require flatbase/flatbase
-    
-## Basics of Query Building
 
-All functionality follows the same basic flow. Once you understand it, the API is really intuitive:
+## Usage
 
-1) Create a `Query` object. The query object is specific to the type of query, and will be one of the following:
+### Reading
 
-```php
-$query = $flatbase->read(); // \Flatbase\Query\ReadQuery
-$query = $flatbase->insert(); // \Flatbase\Query\InsertQuery
-$query = $flatbase->update(); // \Flatbase\Query\UpdateQuery
-$query = $flatbase->delete(); // \Flatbase\Query\DeleteQuery
-```
-
-2) Next, set the query properties. This will be one of, or a collection of `in`, `where` and `set`, depending on the type of query.
+Fetch all the records from a collection:
 
 ```php
-$query = $flatbase->update();
-$query->in('posts');
-$query->where('post_id', '=', 5);
-$query->setValues(['title' => 'New Post Title']);
+$flatase->read()->in('users')->get(); // Flatbase\Collection
 ```
 
-> All `Query` methods implement a fluent interface, so you can chain method calls if you prefer:
-
-3) Finally, `execute` the query. Executing a `ReadQuery` will return a `Flatbas\Collection` object; otherwise we return `void`.
+Reading only data matching a certain criteria:
 
 ```php
-$query->execute();
+$flatbase->read()->in('users')->where('id', '==', '5')->get();
 ```
 
-> For `ReadQuery`'s, calling `$query->get()` is an alias of `$query->execute()`. `$query->first()` is also provided to return the first collection item, or `null` if the collection is empty.
+We support all the comparison operators you'd expect:
+
+- `=`
+- `!=`
+- `==`
+- `!==`
+- `<`
+- `>`
+
+You can chain as many `where()` conditions as you like:
+
+```php
+$flatbase->read()
+    ->in('users')
+    ->where('age', '<', 40)
+    ->where('age', '>', 20)
+    ->where('country', '==', 'UK')
+    ->get();
+```
+
+Limit the returned records:
+
+```php
+$flatbase->read()->in('users')->limit(10)->get(); // Get the first 10 records
+$flatbase->read()->in('users')->skip(5)->limit(10)->get(); // Skip the first 5, then return the next 10
+$flatbase->read()->in('users')->first(); // Get the first record
+```
+
+Sort the records:
+
+```php
+$flatbase->read()->in('users')->sort('age')->get(); // Sort by age in ascending order
+$flatbase->read()->in('users')->sortDesc('age')->get(); // Sort by age in descending order
+```
+
+Just get a count of records:
+
+```php
+$flatbase->read()->in('users')->count();
+```
+
+### Deleting
+
+Delete all records in a collection:
+
+```php
+$flatbase->delete()->in('users')->execute();
+```
+
+Or just some records:
+
+```php
+$flatbase->delete()->in('users')->where('id', '==', 5)->execute();
+```
+
+### Inserting
+
+```php
+$flatbase->insert()->in('users')->setValues([
+    'name' => 'Adam',
+    'country' => 'UK',
+    'language' => 'English'
+])->execute();
+```
+
+### Updating
+
+Update all records in a collection:
+
+```php
+$flatbase->update()->in('users')->setValues(['country' => 'IE',])->execute();
+```
+
+Or just some records:
+
+```php
+$flatbase->update()
+    ->in('users')
+    ->setValues(['country' => 'IE',])
+    ->where('name', '==', 'Adam')
+    ->execute();
+```
+
 
 ## SQL Cheat Sheet
 
@@ -78,7 +146,70 @@ SQL Statement | Flatbase Query
 `DELETE FROM posts WHERE id = 2` | `$flatbase->delete()->in('posts')->where('id', '==', 2)->execute();`
 `INSERT INTO posts SET title='Foo', content='Bar'` | `$flatbase->insert()->in('posts')->setValues(['title' => 'Foo', 'content' => 'Bar')->execute();`
 
-## Why?
+## Command Line Interface
+
+Flatbase includes a command line interface `flatbase` for quick manipulation of data outside of your application.
+
+```bash
+php vendor/bin/flatbase read users
+```
+
+### Installation
+
+To use the CLI, you must define the path to your storage directory. This can either be done with a `flatbase.json` file in the directory you call flatbase from (usually your application root):
+
+```json
+{
+    "path": "some/path/to/storage"
+}
+```
+
+Alternatively, simply include the `--path` option when issuing commands. Eg:
+
+```bash
+php vendor/bin/flatbase read users --path="some/path/to/storage"
+```
+
+
+### Demo
+<img src="https://raw.githubusercontent.com/adamnicholson/flatbase/dev/console/cli-demo.gif" />
+
+### Usage
+
+```bash
+# Get all records
+php flatbase read users
+
+# Get the first record in a collection
+php flatbase read users --first
+
+# Count the records in a collection
+php flatbase read users --count
+
+# Get users matching some where clauses
+php flatbase read users --where "name,==,Adam" --where "age,<,30"
+
+# Update some record(s)
+php flatbase update users --where "age,<,18" --where "age,>,12" ageGroup=teenager
+
+# Insert a new record
+php flatbase insert users name=Adam age=25 country=UK
+
+# Delete some record(s)
+php flatbase delete users --where "name,==,Adam"
+```
+
+For more info on the CLI, use one of the `help` commands
+
+```bash
+php flatbase help
+php flatbase read --help
+php flatbase update --help
+php flatbase insert --help
+php flatbase delete --help
+```
+
+## Why us a flat file database?
 
 What are some of the advantages of a flat file database?
 
