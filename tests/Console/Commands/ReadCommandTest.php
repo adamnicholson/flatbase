@@ -41,6 +41,46 @@ class ReadCommandTest extends FlatbaseTestCase
         });
     }
 
+    public function testLimit()
+    {
+        $this->runReadCommandTest(['collection' => 'users', '--limit' => '5'], function(ReadQuery $query) {
+                $this->assertEquals($query->getLimit(), 5);
+                return true;
+        });
+    }
+
+    public function testOffset()
+    {
+        $this->runReadCommandTest(['collection' => 'users', '--skip' => '2'], function(ReadQuery $query) {
+                $this->assertEquals($query->getOffset(), 2);
+                return true;
+        });
+    }
+
+    public function testSort()
+    {
+        $this->runReadCommandTest(['collection' => 'users', '--sort' => 'age'], function(ReadQuery $query) {
+                $this->assertEquals($query->getSortBy(), ['age', 'ASC']);
+                return true;
+        });
+    }
+
+    public function testSortDesc()
+    {
+        $this->runReadCommandTest(['collection' => 'users', '--sortDesc' => 'age'], function(ReadQuery $query) {
+                $this->assertEquals($query->getSortBy(), ['age', 'DESC']);
+                return true;
+        });
+    }
+
+    public function testFirst()
+    {
+        $this->runReadCommandTest(['collection' => 'users', '--first' => true], function(ReadQuery $query) {
+                $this->assertEquals($query->getLimit(), 1);
+                return true;
+        });
+    }
+
     protected function runReadCommandTest(array $input, callable $executeArgumentExpectation)
     {
         // Create the command
@@ -58,10 +98,10 @@ class ReadCommandTest extends FlatbaseTestCase
 
         // Define what the query argument should look like when Flatbase::execute() is called
         $expectedQuery = Argument::that($executeArgumentExpectation);
-
         $flatbase->execute($expectedQuery)->shouldBeCalled()->willReturn(new Collection());
-        $input = new ArrayInput($input);
 
+        // Run it
+        $input = new ArrayInput($input);
         $output = $this->prophesize('Symfony\Component\Console\Output\OutputInterface');
         $command->run($input, $output->reveal());
     }

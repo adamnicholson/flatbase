@@ -101,6 +101,26 @@ class ReadCommand extends AbstractCommand
             $query->where($l, $op, $r);
         }
 
+        if ($limit = $this->input->getOption('limit')) {
+            $query->limit($limit);
+        }
+
+        if ($offset = $this->input->getOption('skip')) {
+            $query->skip($offset);
+        }
+
+        if ($offset = $this->input->getOption('sort')) {
+            $query->sort($offset);
+        }
+
+        if ($offset = $this->input->getOption('sortDesc')) {
+            $query->sortDesc($offset);
+        }
+
+        if ($this->input->getOption('first')) {
+            $query->limit(1);
+        }
+
         return $query;
     }
 
@@ -121,14 +141,44 @@ class ReadCommand extends AbstractCommand
                 'where',
                 null,
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
-                'Where',
+                'Add a "where" statement. Must include 3 comma-separated parts. Eg. "name,==,Adam"',
                 []
+            )
+            ->addOption(
+                'limit',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Limit the number of results'
+            )
+            ->addOption(
+                'skip',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Skip the first x number of results'
+            )
+            ->addOption(
+                'sort',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Sort the results by a field in ascending order'
+            )
+            ->addOption(
+                'sortDesc',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Sort the results by a field in descending order'
             )
             ->addOption(
                 'count',
                 null,
                 InputOption::VALUE_NONE,
-                'If set, only the record count will be output'
+                'Only get the record count'
+            )
+            ->addOption(
+                'first',
+                null,
+                InputOption::VALUE_NONE,
+                'Only get the first record'
             )
         ;
 
