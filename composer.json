@@ -7,12 +7,7 @@
             "email": "adamnicholson10@gmail.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:adamnicholson/php-serializer.git"
-        }
-    ],
+    "bin": ["flatbase"],
     "require": {
         "php-serializer/php-serializer": "dev-master",
         "phpunit/phpunit": "~4.5",
