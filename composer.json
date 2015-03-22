@@ -9,10 +9,10 @@
     ],
     "bin": ["flatbase"],
     "require": {
-        "php-serializer/php-serializer": "dev-master",
         "phpunit/phpunit": "~4.5",
         "symfony/console": "~2.6",
-        "symfony/var-dumper": "~2.6"
+        "symfony/var-dumper": "~2.6",
+        "php-serializer/php-serializer": "0.1.*"
     },
     "autoload": {
         "psr-4": {
