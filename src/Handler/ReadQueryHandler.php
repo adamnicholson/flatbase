@@ -66,7 +66,7 @@ class ReadQueryHandler extends QueryHandler
     protected function sortRecords(&$results, ReadQuery $query)
     {
         if (list($sortField, $sortDirection) = $query->getSortBy()) {
-            usort($results, function ($a, $b) use ($sortField, $sortDirection) {
+            usort($results, function($a, $b) use ($sortField, $sortDirection) {
 
                 $leftValue = $this->getRecordField($a, $sortField);
                 $rightValue = $this->getRecordField($b, $sortField);

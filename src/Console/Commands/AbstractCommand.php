@@ -59,7 +59,7 @@ abstract class AbstractCommand extends Command
         }
         $config = $this->getConfig();
 
-        return getcwd() . '/' . $config->path;
+        return getcwd().'/'.$config->path;
     }
 
     /**
@@ -69,7 +69,7 @@ abstract class AbstractCommand extends Command
      */
     protected function getConfig()
     {
-        $configPath = $this->input->getOption('config') ?: (getcwd() . '/flatbase.json');
+        $configPath = $this->input->getOption('config') ?: (getcwd().'/flatbase.json');
 
         $defaults = new \stdClass();
         $defaults->path = null;
