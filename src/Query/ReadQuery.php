@@ -42,7 +42,7 @@ class ReadQuery extends Query
 
     /**
      * Get the limit
-     * @return null
+     * @return integer|null
      */
     public function getLimit()
     {

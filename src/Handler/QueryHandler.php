@@ -79,7 +79,7 @@ abstract class QueryHandler
                 return $value > $right;
 
             default:
-                throw new \Exception('Operator [' . $op . '] is not supported');
+                throw new \Exception('Operator ['.$op.'] is not supported');
         }
     }
 
@@ -111,7 +111,7 @@ abstract class QueryHandler
     /**
      * Get a SerializedArray instance for the collection
      *
-     * @param $collection
+     * @param string $collection
      * @return SerializedArray
      */
     public function getIterator($collection)

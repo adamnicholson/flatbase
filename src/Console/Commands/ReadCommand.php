@@ -42,7 +42,7 @@ class ReadCommand extends AbstractCommand
         $records = $this->buildQuery($input)->get();
 
         // Write out the count
-        $output->writeln('<info>Found ' . $records->count() . ' records</info>');
+        $output->writeln('<info>Found '.$records->count().' records</info>');
 
         if ($input->getOption('count')) {
             return;

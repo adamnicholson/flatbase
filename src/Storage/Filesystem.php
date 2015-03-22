@@ -33,7 +33,7 @@ class Filesystem implements Storage
      */
     protected function getFilename($collection)
     {
-        $file = rtrim($this->storageDir, '/') . '/' . $collection;
+        $file = rtrim($this->storageDir, '/').'/'.$collection;
 
         if (!file_exists($file)) {
             file_put_contents($file, serialize([]));
