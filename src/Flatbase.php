@@ -2,6 +2,7 @@
 
 namespace Flatbase;
 
+use Flatbase\Exception\Exception;
 use Flatbase\Handler\DeleteQueryHandler;
 use Flatbase\Handler\InsertQueryHandler;
 use Flatbase\Handler\ReadQueryHandler;
@@ -104,7 +105,7 @@ class Flatbase
             return new UpdateQueryHandler($this);
         }
 
-        throw new \Exception('Could not resolve handler for query');
+        throw new Exception('Could not resolve handler for query');
     }
 
     /**

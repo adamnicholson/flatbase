@@ -3,6 +3,7 @@
 namespace Flatbase\Console\Commands;
 
 use Flatbase\Console\Dumper;
+use Flatbase\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -66,7 +67,7 @@ class ReadCommand extends AbstractCommand
             $splode = explode(',', $where);
 
             if (count($splode) !== 3) {
-                throw new \InvalidArgumentException('Each --where must be passed a string in the format "{key},{operator},{value}. Eg. --where "name,==,Adam"');
+                throw new InvalidArgumentException('Each --where must be passed a string in the format "{key},{operator},{value}. Eg. --where "name,==,Adam"');
             }
 
             list($l, $op, $r) = $splode;

@@ -2,6 +2,7 @@
 
 namespace Flatbase\Handler;
 
+use Flatbase\Exception\Exception;
 use Flatbase\Query\InsertQuery;
 use Flatbase\Query\Query;
 
@@ -21,7 +22,7 @@ class InsertQueryHandler extends QueryHandler
         parent::validateQuery($query);
 
         if (!$query->getValues()) {
-            throw new \Exception('No values given to insert');
+            throw new Exception('No values given to insert');
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Flatbase\Console\Commands;
 
+use Flatbase\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,7 +36,7 @@ class InsertCommand extends AbstractCommand
         foreach ($input->getArgument('set') as $value) {
             $splode = explode('=', $value);
             if (count($splode) !== 2) {
-                throw new \InvalidArgumentException('Each value set must be passed a string with a single key-value pair formatted as "key=value". Eg. "flatbase insert users name=Adam created=Monday age=25"');
+                throw new InvalidArgumentException('Each value set must be passed a string with a single key-value pair formatted as "key=value". Eg. "flatbase insert users name=Adam created=Monday age=25"');
             }
             $values[$splode[0]] = $splode[1];
         }

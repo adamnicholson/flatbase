@@ -2,6 +2,8 @@
 
 namespace Flatbase\Query;
 
+use Flatbase\Exception\Exception;
+use Flatbase\Exception\InvalidArgumentException;
 use Flatbase\Flatbase;
 
 abstract class Query
@@ -98,7 +100,7 @@ abstract class Query
             return $this;
         }
 
-        throw new \InvalidArgumentException('Argument 1 to Query::set() must be an array if the second argument is not given');
+        throw new InvalidArgumentException('Argument 1 to Query::set() must be an array if the second argument is not given');
     }
 
     /**
@@ -110,7 +112,7 @@ abstract class Query
     public function execute()
     {
         if (!$this->flatbase) {
-            throw new \Exception('Query::execute() can only be called when the query was
+            throw new Exception('Query::execute() can only be called when the query was
                 created by Flatbase, eg. Flatbase::read()');
         }
 

@@ -2,6 +2,7 @@
 
 namespace Flatbase\Handler;
 
+use Flatbase\Exception\Exception;
 use Flatbase\Flatbase;
 use Flatbase\Query\Query;
 use PHPSerializer\SerializedArray;
@@ -79,7 +80,7 @@ abstract class QueryHandler
                 return $value > $right;
 
             default:
-                throw new \Exception('Operator ['.$op.'] is not supported');
+                throw new Exception('Operator ['.$op.'] is not supported');
         }
     }
 
@@ -104,7 +105,7 @@ abstract class QueryHandler
     protected function validateQuery(Query $query)
     {
         if (!$query->getCollection()) {
-            throw new \Exception('No colleciton set');
+            throw new Exception('No colleciton set');
         }
     }
 
