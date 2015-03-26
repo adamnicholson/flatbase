@@ -8,7 +8,7 @@ abstract class Query
 {
     protected $flatbase;
     protected $collection;
-    protected $values;
+    protected $values = [];
     protected $conditions = [];
 
     public function __construct(Flatbase $flatbase = null)
@@ -84,6 +84,21 @@ abstract class Query
     {
         $this->values = $values;
         return $this;
+    }
+
+    public function set($data, $valueIfDataIsKey = null)
+    {
+        if (is_array($data) && $valueIfDataIsKey === null) {
+            $this->values = array_merge($this->values, $data);
+            return $this;
+        }
+
+        if ($valueIfDataIsKey !== null) {
+            $this->values[$data] = $valueIfDataIsKey;#
+            return $this;
+        }
+
+        throw new \InvalidArgumentException('Argument 1 to Query::set() must be an array if the second argument is not given');
     }
 
     /**
