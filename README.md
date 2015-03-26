@@ -3,12 +3,9 @@
 Flatbase is a flat file database written in PHP which aims to be:
 
 - Lightweight
-- Very easy to install, with minimal configuration
+- Very easy to install, with minimal/no configuration
 - Simple intuitive API
-- Suitable for small data sets
-- Suitable for testing & prototyping
-
-Flatbase is *not* intended to be a replacement for "real" database engines. If you're storing sensitive data in a production environment then this probably isn't for you.
+- Suitable for small data sets, low-load applications, and testing/prototyping
 
 ## Example Usage
 
@@ -19,7 +16,7 @@ $storage = new Flatbase\Storage\Filesystem('/path/to/storage/dir');
 $flatbase = new Flatbase\Flatbase($storage);
 
 $flatbase->insert()->in('users')
-    ->setValues(['name' => 'Adam', 'height' => "6'4"])
+    ->set(['name' => 'Adam', 'height' => "6'4"])
     ->execute();
 
 $flatbase->read()->in('users')
@@ -107,7 +104,7 @@ $flatbase->delete()->in('users')->where('id', '==', 5)->execute();
 ### Inserting
 
 ```php
-$flatbase->insert()->in('users')->setValues([
+$flatbase->insert()->in('users')->set([
     'name' => 'Adam',
     'country' => 'UK',
     'language' => 'English'
@@ -119,7 +116,7 @@ $flatbase->insert()->in('users')->setValues([
 Update all records in a collection:
 
 ```php
-$flatbase->update()->in('users')->setValues(['country' => 'IE',])->execute();
+$flatbase->update()->in('users')->set(['country' => 'IE',])->execute();
 ```
 
 Or just some records:
@@ -127,7 +124,7 @@ Or just some records:
 ```php
 $flatbase->update()
     ->in('users')
-    ->setValues(['country' => 'IE',])
+    ->set(['country' => 'IE',])
     ->where('name', '==', 'Adam')
     ->execute();
 ```
@@ -142,9 +139,9 @@ SQL Statement | Flatbase Query
 `SELECT * FROM posts WHERE id = 5` | `$flatbase->read()->in('posts')->where('id', '==', 5)->get();`
 `SELECT * FROM posts WHERE views > 500` | `$flatbase->read()->in('posts')->where('views', '>', 500)->get();`
 `SELECT * FROM posts WHERE views > 50 AND id = 5` | `$flatbase->read()->in('posts')->where('views', '>', 50)->where('id', '==', '5')->get();`
-`UPDATE posts SET title = 'Foo' WHERE content = 'bar'` | `$flatbase->update()->in('posts')->setValues(['title' => 'var'])->where('content', '==', 'bar')->execute();`
+`UPDATE posts SET title = 'Foo' WHERE content = 'bar'` | `$flatbase->update()->in('posts')->set(['title' => 'var'])->where('content', '==', 'bar')->execute();`
 `DELETE FROM posts WHERE id = 2` | `$flatbase->delete()->in('posts')->where('id', '==', 2)->execute();`
-`INSERT INTO posts SET title='Foo', content='Bar'` | `$flatbase->insert()->in('posts')->setValues(['title' => 'Foo', 'content' => 'Bar')->execute();`
+`INSERT INTO posts SET title='Foo', content='Bar'` | `$flatbase->insert()->in('posts')->set(['title' => 'Foo', 'content' => 'Bar')->execute();`
 
 ## Command Line Interface
 
@@ -172,7 +169,7 @@ php vendor/bin/flatbase read users --path="some/path/to/storage"
 
 
 ### Demo
-<img src="https://raw.githubusercontent.com/adamnicholson/flatbase/dev/console/cli-demo.gif" />
+<img src="https://raw.githubusercontent.com/adamnicholson/flatbase/master/cli-demo.gif" />
 
 ### Usage
 
@@ -216,14 +213,14 @@ What are some of the advantages of a flat file database?
 #### It's really easy to get started
 Just add `flatbase/flatbase` to your `composer.json` and you're rolling. No need for any other services running.
 
-#### It's not a relational database
-Flatbase is schema-less, so you don't have to worry about defining a schema, writing migration scripts, or any of that other boring stuff. Just instantiate `Flatbase` and start giving it data. This is particularly useful when developing/prototyping new features.
+#### It's schema-less
+You don't have to worry about defining a schema, writing migration scripts, or any of that other boring stuff. Just instantiate `Flatbase` and start giving it data. This is particularly useful when developing/prototyping new features.
 
 #### Store plain old PHP objects
 Data is stored in a native PHP serialized array using [PHPSerializer](https://github.com/adamnicholson/php-serializer). This means that you can store plain old PHP objects straight in the database:
 
 ```php
-$flatbase->insert()->in('users')->setValues([
+$flatbase->insert()->in('users')->set([
     'id' => 1,
     'name' => 'Adam',
     'added' => new DateTime()
