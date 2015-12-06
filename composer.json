@@ -9,7 +9,6 @@
     ],
     "bin": ["flatbase"],
     "require": {
-        "phpunit/phpunit": "~4.5",
         "symfony/console": "~2.6",
         "symfony/var-dumper": "~2.6",
         "php-serializer/php-serializer": "0.1.*"
@@ -20,6 +19,7 @@
         }
     },
     "require-dev": {
-        "devster/ubench": "~1.1"
+        "devster/ubench": "~1.1",
+        "phpunit/phpunit": "^5"
     }
 }
