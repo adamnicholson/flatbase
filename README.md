@@ -37,7 +37,7 @@ $flatbase->read()->in('users')
 Fetch all the records from a collection:
 
 ```php
-$flatase->read()->in('users')->get(); // Flatbase\Collection
+$flatbase->read()->in('users')->get(); // Flatbase\Collection
 ```
 
 Reading only data matching a certain criteria:
