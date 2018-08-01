@@ -206,7 +206,7 @@ php flatbase insert --help
 php flatbase delete --help
 ```
 
-## Why us a flat file database?
+## Why use a flat file database?
 
 What are some of the advantages of a flat file database?
 
@@ -217,7 +217,7 @@ Just add `flatbase/flatbase` to your `composer.json` and you're rolling. No need
 You don't have to worry about defining a schema, writing migration scripts, or any of that other boring stuff. Just instantiate `Flatbase` and start giving it data. This is particularly useful when developing/prototyping new features.
 
 #### Store plain old PHP objects
-Data is stored in a native PHP serialized array using [PHPSerializer](https://github.com/adamnicholson/php-serializer). This means that you can store plain old PHP objects straight in the database:
+Data is stored in a native PHP serialized array using [PHPSerializer](https://github.com/adamnicholson/php-serializer). This means that you can store plain old PHP objects straight to the database:
 
 ```php
 $flatbase->insert()->in('users')->set([
@@ -231,13 +231,13 @@ var_dump($record['added']); // DateTime
 ```
     
 It also means that you can, at any point, easily unserialize() your data without having to go through Flatbase if you wish. 
-> Note: Althought serializing is possible, be careful when using this in production. Remember that if you serialize an object, and then later on delete or move the class it was an instance of, you won't be able to un-serialze it. Storing scalar data is always a safer alternative.
+> Note: Although serializing is possible, be careful when using this in production. Remember that if you serialize an object, and then, later on, delete or move the class it was an instance of, you won't be able to un-serialize it. Storing scalar data is always a safer alternative.
     
 #### It isn't actually that slow
 
-Ok, that's a bit of a baiting title. Some operations are remarkably quick considering this is a flat file database. On a mediocre Ubuntu desktop development environment it can process around 50,000 "inserts" in 1 second. No, that is still nowhere near a database like MySQL or Mongo, but it's a hell of a lot more than most people need. 
+Ok, that's a bit of a baiting title. Some operations are remarkably quick considering this is a flat file database. On a mediocre Ubuntu desktop development environment, it can process around 50,000 "inserts" in 1 second. No, that is still nowhere near a database like MySQL or Mongo, but it's a hell of a lot more than most people need. 
 
-Reading data out is certainly a lot slower, and although there's lots of places we can optimise, ultimately you'd need to accept this is never going to be a high performance solution for persistence.
+Reading data out is certainly a lot slower, and although there are lots of places we can optimise, ultimately you'd need to accept this is never going to be a high-performance solution for persistence.
 
 ## Author
 
